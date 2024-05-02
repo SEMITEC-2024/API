@@ -63,5 +63,20 @@ const createUser = (req, res) => {
             res.send("Usuario registrado con exito");
         }
     );
-};
-module.exports = { getUserType, getCountries, getProvinces, getCantons, getInstitutions, createUser };
+}
+
+
+// gets the encrypted password from bd and compares it 
+const login = (req, res) => {
+    const { password, email } = req.body
+    const sql = 'CALL login(?)'
+    db.query(sql, [email], (error, result) => {
+        if (error) throw error
+        let permission = bcrypt.compareSync(password, result[0][0].password)
+        let account_type = ""
+        if ( permission === true) account_type = result[0][0].name
+        res.json({"account_type": `${account_type}`,"permission": `${permission}`})
+    })
+}
+
+module.exports = { getUserType, getCountries, getProvinces, getCantons, getInstitutions, createUser, login };

@@ -8,5 +8,6 @@ router.get('/provinces', accountController.getProvinces)
 router.get('/cantons', accountController.getCantons)
 router.get('/institutions', accountController.getInstitutions)
 router.post('/register', accountController.createUser)
+router.post('/login', accountController.login)
 
 module.exports =  router 
