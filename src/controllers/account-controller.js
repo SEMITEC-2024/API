@@ -1,6 +1,51 @@
 const db = require("../database/connection");
 const bcrypt = require("bcryptjs");
 
+// get user-account type
+const getUserType = (req, res) => {
+    const sql = "CALL get_user_type()";
+    db.query(sql, (error, result, fields) => {
+        if (error) throw error;
+        res.json(result[0]);
+    });
+};
+
+// get countries
+const getCountries = (req, res) => {
+    const sql = 'CALL get_country()'
+    db.query(sql, (error, result) => {
+        if (error) throw error
+        res.json(result[0])
+    })
+}
+
+// get provinces from country
+const getProvinces = (req, res) => {
+    const sql = 'CALL get_province(?)'
+    db.query(sql, [req.query.country_id], (error, result) => {
+        if (error) throw error
+        res.json(result[0])
+    })
+}
+
+// get cantons from province
+const getCantons = (req, res) => {
+    const sql = 'CALL get_cantons(?)'
+    db.query(sql, [req.query.province_id], (error, result) => {
+        if (error) throw error
+        res.json(result[0])
+    })
+}
+
+// get institutions from country
+const getInstitutions = (req, res) => {
+    const sql = 'CALL get_institution(?)'
+    db.query(sql, [req.query.country_id], (error, result) => {
+        if (error) throw error
+        res.json(result[0])
+    })
+}
+
 // create user and save it into the database
 const createUser = (req, res) => {
     const salt = bcrypt.genSaltSync(10);
@@ -19,4 +64,4 @@ const createUser = (req, res) => {
         }
     );
 };
-module.exports = { createUser };
+module.exports = { getUserType, getCountries, getProvinces, getCantons, getInstitutions, createUser };
