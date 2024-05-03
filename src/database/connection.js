@@ -1,9 +1,9 @@
 const mysql = require('mysql2')
 const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'Password',
-    database: 'semitec_db'
+    host: process.env.DATA_BASE_HOST,
+    user: process.env.DATA_BASE_USER,
+    password: process.env.DATA_BASE_PASSWORD,
+    database: process.env.DATA_BASE_NAME
 })
 
 connection.connect( error => {
