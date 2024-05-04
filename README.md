@@ -192,3 +192,62 @@ Además, si la autenticación fue exitosa, se retornara en el encabezado, un tok
         "user_type_name": "Estudiante",
         "iat": 1714828852
     }
+
+### Obtener lista de lecciones
+Se puede obtener la lista de todas las lecciones utiliando el endpoint `/lessons`.
+
+    GET http://server-ip:3000/lessons
+
+    [
+        {
+            "lesson_id": 1,
+            "name": "Saludos",
+            "words": "hola mundo",
+            "description": "Practica escribiendo saludos básicos."
+        },
+        {
+            "lesson_id": 2,
+            "name": "Frutas",
+            "words": "manzana naranja pera",
+            "description": "Practica escribiendo nombres de frutas comunes."
+        },
+        {
+            "lesson_id": 3,
+            "name": "Velocidad",
+            "words": "rápido zorro marrón",
+            "description": "Ejercicio de velocidad con palabras difíciles."
+        },
+        {
+            "lesson_id": 4,
+            "name": "Complejidad",
+            "words": "ejemplo complicado",
+            "description": "Practica con frases complejas."
+        },
+        {
+            "lesson_id": 5,
+            "name": "Desafío extremo",
+            "words": "excepcionalmente difícil",
+            "description": "Un ejercicio de mecanografía muy desafiante."
+        },
+        {
+            "lesson_id": 6,
+            "name": "Seguridad",
+            "words": "criptografía avanzada",
+            "description": "Practica escribiendo palabras relacionadas con la seguridad informática."
+        }
+    ]
+
+### Obtener una lección específica
+Se puede obtener los datos de una lección especifica agregando el id de la lección como parámetro `/lesson?lesson_id=1`
+
+    GET http://server-ip:3000/lessons?lesson_id=1
+
+    [
+    {
+        "lesson_id": 1,
+        "words": "hola mundo",
+        "iterations": 5,
+        "min_time": 60,
+        "min_mistakes": 0
+    }
+]
