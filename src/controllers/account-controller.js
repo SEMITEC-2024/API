@@ -93,6 +93,7 @@ const login = (req, res) => {
                 message = "Contraseña incorrecta";
             }
         }
+        res.set("Access-Control-Expose-Headers","*")
         res.header('auth-token', token).json({
             permission: `${permission}`,
             message: `${message}`,
