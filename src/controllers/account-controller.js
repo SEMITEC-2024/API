@@ -100,6 +100,14 @@ const login = (req, res) => {
     });
 };
 
+const getProfileInfo = (req, res) => {
+    const sql = 'CALL get_user(?)'
+    db.query(sql, [req.query.user_id], (error, result) => {
+        if (error) throw error;
+        res.json(result[0])
+    })
+}
+
 module.exports = {
     getUserType,
     getCountries,
@@ -108,4 +116,5 @@ module.exports = {
     getInstitutions,
     createUser,
     login,
+    getProfileInfo
 };

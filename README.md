@@ -265,3 +265,22 @@ Se pueden obtener los grupos por profesor agregando el id del profesor como par�
             "total_students": 2
         }
     ]
+
+### Obtener información del perfil de usuario
+Se puede obtener la información del perfil agregando el id del usuario como parámetro `/profile?user_id=1`.
+
+    GET http://25.37.76.172:5000/profile?user_id=1
+
+    [
+        {
+            "name": "José Pérez",
+            "user_type": "Estudiante",
+            "institution": "Escuela Padre Peralta",
+            "district": "Pacayas",
+            "user_code": "adwf",
+            "canton": "Alvarado",
+            "province": "Cartago",
+            "country": "Costa Rica",
+            "email": "jose.perez@estudiantec.cr"
+        }
+    ]
