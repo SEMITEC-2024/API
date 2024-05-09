@@ -243,11 +243,25 @@ Se puede obtener los datos de una lección especifica agregando el id de la lecc
     GET http://server-ip:3000/lessons?lesson_id=1
 
     [
-    {
-        "lesson_id": 1,
-        "words": "hola mundo",
-        "iterations": 5,
-        "min_time": 60,
-        "min_mistakes": 0
-    }
-]
+        {
+            "lesson_id": 1,
+            "words": "hola mundo",
+            "iterations": 5,
+            "min_time": 60,
+            "min_mistakes": 0
+        }
+    ]
+
+### Obtener grupos por profesor
+Se pueden obtener los grupos por profesor agregando el id del profesor como parámetro `/teacher/groups?teacher_id=11`
+
+    GET http://server-ip:3000/teacher/groups?teacher_id=11
+
+    [
+        {
+            "group_id": 2,
+            "name": "Grupo B",
+            "progress": "Frutas",
+            "total_students": 2
+        }
+    ]

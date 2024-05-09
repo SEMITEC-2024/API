@@ -4,7 +4,9 @@ require('dotenv').config()
 const port = process.env.PORT
 const con = require('./controllers/account-controller')
 const accountRoutes = require('./routes/account-routes')
+const cors = require('cors')
 
+app.use(cors({origin: "*"}))
 app.use(express.json());
 
 app.use(accountRoutes);
