@@ -18,6 +18,6 @@ router.get('/lessons', lessonsController.getLessons)
 router.get('/lesson', lessonsController.getLesson)
 
 // groups-routes
-
 router.get('/teacher/groups', groupsController.getTeacherGroups)
+router.get('/group/students', groupsController.getStudentsGroup)
 module.exports =  router 

@@ -284,3 +284,20 @@ Se puede obtener la información del perfil agregando el id del usuario como par
             "email": "jose.perez@estudiantec.cr"
         }
     ]
+
+
+### Obtener estudiantes por grupo
+Se pueden obtener los estudiantes de un grupo agregando el id del grupo como parámetro `/group/students?group_id=3`
+
+    GET http://25.37.76.172:5000/group/students?group_id=3
+
+    [
+        {
+            "student_id": 3,
+            "name": "Pedro Castro"
+        },
+        {
+            "student_id": 8,
+            "name": "Lucía Sánchez"
+        }
+    ]

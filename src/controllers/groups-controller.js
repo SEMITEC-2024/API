@@ -8,5 +8,11 @@ const getTeacherGroups = (req, res) => {
         res.json(result[0])
     })
 }
-
-module.exports = { getTeacherGroups }
+ const getStudentsGroup = (req, res) => {
+    const sql = 'CALL students_group(?)'
+    db.query(sql,[req.query.group_id], (error, result) => {
+        if (error) throw error;
+        res.json(result[0])
+    })
+ }
+module.exports = { getTeacherGroups, getStudentsGroup }
