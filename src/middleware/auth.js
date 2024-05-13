@@ -27,7 +27,6 @@ const teacherGroupsAuth = (req, res, next) => {
 };
 
 const studentAuth = (req, res, next) => {
-    console.log('in')
     const token = req.headers["auth-token"];
     if (token) {
         try {

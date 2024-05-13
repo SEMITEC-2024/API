@@ -49,21 +49,29 @@ const getInstitutions = (req, res) => {
 
 // create user and save it into the database
 const createUser = (req, res) => {
-    const salt = bcrypt.genSaltSync(10);
-    const { user_type_id, institution_id, district_id, password, email, name } =
-        req.body;
+    try {
+            console.log(req.body)
 
-    const hash = bcrypt.hashSync(password, salt);
-    const sql = `CALL insert_user(?, ?, ?, ?, ?, ?, ?)`;
+        const salt = bcrypt.genSaltSync(10);
+        const { user_type_id, institution_id, district_id, password, email, name } =
+            req.body;
 
-    db.query(
-        sql,
-        [user_type_id, institution_id, district_id, hash, email, name, salt],
-        (error) => {
-            if (error) throw error;
-            res.send("Usuario registrado con exito");
-        }
-    );
+        const hash = bcrypt.hashSync(password, salt);
+        const sql = `CALL insert_user(?, ?, ?, ?, ?, ?, ?)`;
+
+        db.query(
+            sql,
+            [user_type_id, institution_id, district_id, hash, email, name, salt],
+            (error) => {
+                if (error) {
+                    console.log(error)
+                };
+                res.json({ message: "Usuario registrado con exito"});
+            }
+        );
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 // gets the encrypted password from bd and compares it
@@ -109,10 +117,11 @@ const login = (req, res) => {
 };
 
 const getProfileInfo = (req, res) => {
+    console.log(req.teacher_id, 'profile');
     const sql = "CALL get_user(?)";
-    db.query(sql, [req.query.user_id], (error, result) => {
+    db.query(sql, [req.teacher_id], (error, result) => {
         if (error) throw error;
-        res.json(result[0]);
+        res.json(result[0][0]);
     });
 };
 
