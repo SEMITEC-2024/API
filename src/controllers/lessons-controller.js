@@ -14,7 +14,7 @@ const getLesson = (req, res)  => {
     const sql = 'CALL get_lesson(?)'
     db.query(sql, [req.query.lesson_id], (error, result) => {
         if (error) throw error;
-        res.json(result[0])
+        res.json(result[0][0])
     })
 }
 
