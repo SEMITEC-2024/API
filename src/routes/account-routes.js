@@ -3,6 +3,7 @@ const router = Router()
 const accountController = require('../controllers/account-controller');
 const lessonsController = require('../controllers/lessons-controller')
 const groupsController = require('../controllers/groups-controller')
+
 // acount routes
 router.get('/account-type', accountController.getUserType)
 router.get('/countries', accountController.getCountries)
@@ -12,6 +13,9 @@ router.get('/institutions', accountController.getInstitutions)
 router.post('/register', accountController.createUser)
 router.post('/login', accountController.login)
 router.get('/profile', accountController.getProfileInfo)
+router.get('/teacher/username', accountController.getUsername)
+router.get('/student/username', accountController.getUsername)
+
 
 // lessons routes
 router.get('/lessons', lessonsController.getLessons)

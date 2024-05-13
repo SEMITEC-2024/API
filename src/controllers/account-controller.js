@@ -75,14 +75,16 @@ const login = (req, res) => {
         let permission = false;
         let message = "Este usuario no se encuentra registrado";
         let token = ''
+        let user_type = ''
         if (result[0].length !== 0) {
             const rows = result[0][0];
             permission = bcrypt.compareSync(password, rows.password);
             if (permission === true) {
+                user_type = rows.user_type_name
                 message = "Usuario autenticado con éxito";
                 token = jwt.sign(
                     {
-                        "user-id": `${rows.user_id}`,
+                        user_id: `${rows.user_id}`,
                         user_type_id: `${rows.user_type_id}`,
                         username: `${rows.username}`,
                         user_type_name: `${rows.user_type_name}`,
@@ -97,6 +99,7 @@ const login = (req, res) => {
         res.header('auth-token', token).json({
             permission: `${permission}`,
             message: `${message}`,
+            user_type_name: `${user_type}`,
         });
     });
 };
@@ -109,6 +112,10 @@ const getProfileInfo = (req, res) => {
     })
 }
 
+const getUsername = (req, res) => {
+    res.json({username: req.username})
+}
+
 module.exports = {
     getUserType,
     getCountries,
@@ -117,5 +124,7 @@ module.exports = {
     getInstitutions,
     createUser,
     login,
-    getProfileInfo
+    getProfileInfo,
+    getUsername
+
 };
