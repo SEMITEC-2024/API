@@ -74,13 +74,13 @@ const login = (req, res) => {
         if (error) throw error;
         let permission = false;
         let message = "Este usuario no se encuentra registrado";
-        let token = ''
-        let user_type = ''
+        let token = "";
+        let user_type = "";
         if (result[0].length !== 0) {
             const rows = result[0][0];
             permission = bcrypt.compareSync(password, rows.password);
             if (permission === true) {
-                user_type = rows.user_type_name
+                user_type = rows.user_type_name;
                 message = "Usuario autenticado con éxito";
                 token = jwt.sign(
                     {
@@ -91,30 +91,34 @@ const login = (req, res) => {
                     },
                     process.env.TOKEN_KEY
                 );
-            } else {
-                message = "Contraseña incorrecta";
+                res.set("Access-Control-Expose-Headers", "*");
+                return res.header("auth-token", token).json({
+                    permission: `${permission}`,
+                    message: `${message}`,
+                    user_type_name: `${user_type}`,
+                });
             }
+            message = "Contraseña incorrecta";
+            return res.status(401).json({
+                permission: `${permission}`,
+                message: `${message}`,
+                user_type_name: `${user_type}`,
+            });
         }
-        res.set("Access-Control-Expose-Headers","*")
-        res.header('auth-token', token).json({
-            permission: `${permission}`,
-            message: `${message}`,
-            user_type_name: `${user_type}`,
-        });
     });
 };
 
 const getProfileInfo = (req, res) => {
-    const sql = 'CALL get_user(?)'
+    const sql = "CALL get_user(?)";
     db.query(sql, [req.query.user_id], (error, result) => {
         if (error) throw error;
-        res.json(result[0])
-    })
-}
+        res.json(result[0]);
+    });
+};
 
 const getUsername = (req, res) => {
-    res.json({username: req.username})
-}
+    res.json({ username: req.username });
+};
 
 module.exports = {
     getUserType,
@@ -125,6 +129,5 @@ module.exports = {
     createUser,
     login,
     getProfileInfo,
-    getUsername
-
+    getUsername,
 };
