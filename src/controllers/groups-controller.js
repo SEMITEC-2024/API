@@ -10,9 +10,9 @@ const getTeacherGroups = (req, res) => {
     });
 };
 
-const getStudentsGroup = (req, res) => {
+const getGroupMembers = (req, res) => {
     const sql = "CALL students_group(?)";
-    db.query(sql, [2], (error, result) => {
+    db.query(sql, [req.query.group_id], (error, result) => {
         if (error) throw error;
         res.json(result[0]);
     }); 
@@ -58,7 +58,7 @@ const joinGroup = (req, res) => {
 
 module.exports = {
     getTeacherGroups,
-    getStudentsGroup,
+    getGroupMembers,
     getStudentGroups,
     createGroup,
     joinGroup,

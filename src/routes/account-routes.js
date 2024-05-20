@@ -21,11 +21,16 @@ router.get('/student/username', accountController.getUsername)
 // lessons routes
 router.get('/lessons', lessonsController.getLessons)
 router.get('/lesson', lessonsController.getLesson)
+router.post('/student/lesson/results', lessonsController.saveLessonMetrics)
+router.get('/student/lessons/stats', lessonsController.getAverageMetrics)
+router.post('/teacher/lessons/create', lessonsController.createLesson)
+router.get('/lessons/level', lessonsController.getLessonLevels)
 
 // groups-routes
 router.get('/teacher/groups', groupsController.getTeacherGroups)
-router.get('/group/students', groupsController.getStudentsGroup)
-router.get('/student/groups/', groupsController.getStudentGroups)
+router.get('/student/groups/members', groupsController.getGroupMembers)
+router.get('/teacher/groups/members', groupsController.getGroupMembers)
 router.post('/teacher/groups/create', groupsController.createGroup)
+router.get('/student/groups/', groupsController.getStudentGroups)
 router.post('/student/groups/join', groupsController.joinGroup)
 module.exports =  router 
