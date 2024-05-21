@@ -54,7 +54,23 @@ const joinGroup = (req, res) => {
     } catch (error) {
         console.log(error)
     }
-} 
+}
+
+const getGroupInfo = (req, res) => {
+    try {
+        const sql = 'CALL get_group_info(?)'
+        db.query(sql, [req.query.group_id], (error, result) => {
+            if (error) {
+                res.status(300).json({message: error})
+            }
+            console.log(result[0])
+            res.json(result[0][0])
+        })
+
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 module.exports = {
     getTeacherGroups,
@@ -62,4 +78,5 @@ module.exports = {
     getStudentGroups,
     createGroup,
     joinGroup,
+    getGroupInfo,
 };

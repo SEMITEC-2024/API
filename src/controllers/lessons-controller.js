@@ -61,6 +61,36 @@ const getAverageMetrics = (req, res) => {
     })
 }
 
+const getAverageMetricsTeacher = (req, res) => {
+    const sql = 'CALL get_average_metrics(?)'
+    db.query(sql, [req.query.user_id], (error, result) => {
+        if (error) {
+            res.status(300).json({message: error})
+        }
+        res.json(result[0][0])
+    })
+}
+
+const getAccuracyHistory = (req, res) => {
+    const sql = 'CALL get_last_metrics(?)'
+    db.query(sql, [req.teacher_id], (error, result) => {
+        if (error) {
+            res.status(300).json({message: error})
+        }
+        res.json(result[0])
+    })
+}
+
+const getNextLesson = (req, res) => {
+    const sql = 'CALL get_last_lesson(?)'
+    db.query(sql, [req.teacher_id], (error, result) => {
+        if (error) {
+            res.status(300).json({ message: error})
+        }
+        res.json(result[0][0])
+    })
+}
+
 module.exports = {
     getLessons,
     getLesson,
@@ -68,4 +98,7 @@ module.exports = {
     createLesson,
     getLessonLevels,
     getAverageMetrics,
+    getAccuracyHistory,
+    getNextLesson,
+    getAverageMetricsTeacher,
 }

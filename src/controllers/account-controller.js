@@ -125,6 +125,15 @@ const getProfileInfo = (req, res) => {
     });
 };
 
+const getProfileInfoTeacher = (req, res) => {
+    console.log(req.query.user_id, 'profile');
+    const sql = "CALL get_user(?)";
+    db.query(sql, [req.query.user_id], (error, result) => {
+        if (error) throw error;
+        res.json(result[0][0]);
+    });
+};
+
 const getUsername = (req, res) => {
     res.json({ username: req.username });
 };
@@ -139,4 +148,5 @@ module.exports = {
     login,
     getProfileInfo,
     getUsername,
+    getProfileInfoTeacher,
 };
