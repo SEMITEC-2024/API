@@ -49,21 +49,29 @@ const getInstitutions = (req, res) => {
 
 // create user and save it into the database
 const createUser = (req, res) => {
-    const salt = bcrypt.genSaltSync(10);
-    const { user_type_id, institution_id, district_id, password, email, name } =
-        req.body;
+    try {
+            console.log(req.body)
 
-    const hash = bcrypt.hashSync(password, salt);
-    const sql = `CALL insert_user(?, ?, ?, ?, ?, ?, ?)`;
+        const salt = bcrypt.genSaltSync(10);
+        const { user_type_id, institution_id, district_id, password, email, name } =
+            req.body;
 
-    db.query(
-        sql,
-        [user_type_id, institution_id, district_id, hash, email, name, salt],
-        (error) => {
-            if (error) throw error;
-            res.send("Usuario registrado con exito");
-        }
-    );
+        const hash = bcrypt.hashSync(password, salt);
+        const sql = `CALL insert_user(?, ?, ?, ?, ?, ?, ?)`;
+
+        db.query(
+            sql,
+            [user_type_id, institution_id, district_id, hash, email, name, salt],
+            (error) => {
+                if (error) {
+                    console.log(error)
+                };
+                res.json({ message: "Usuario registrado con exito"});
+            }
+        );
+    } catch (error) {
+        console.log(error);
+    }
 };
 
 // gets the encrypted password from bd and compares it
@@ -74,39 +82,61 @@ const login = (req, res) => {
         if (error) throw error;
         let permission = false;
         let message = "Este usuario no se encuentra registrado";
-        let token = ''
+        let token = "";
+        let user_type = "";
         if (result[0].length !== 0) {
             const rows = result[0][0];
             permission = bcrypt.compareSync(password, rows.password);
             if (permission === true) {
+                user_type = rows.user_type_name;
                 message = "Usuario autenticado con éxito";
                 token = jwt.sign(
                     {
-                        "user-id": `${rows.user_id}`,
+                        user_id: `${rows.user_id}`,
                         user_type_id: `${rows.user_type_id}`,
                         username: `${rows.username}`,
                         user_type_name: `${rows.user_type_name}`,
                     },
                     process.env.TOKEN_KEY
                 );
-            } else {
-                message = "Contraseña incorrecta";
+                res.set("Access-Control-Expose-Headers", "*");
+                return res.header("auth-token", token).json({
+                    permission: `${permission}`,
+                    message: `${message}`,
+                    user_type_name: `${user_type}`,
+                });
             }
+            message = "Contraseña incorrecta";
+            return res.status(401).json({
+                permission: `${permission}`,
+                message: `${message}`,
+                user_type_name: `${user_type}`,
+            });
         }
-        res.header('auth-token', token).json({
-            permission: `${permission}`,
-            message: `${message}`,
-        });
     });
 };
 
 const getProfileInfo = (req, res) => {
-    const sql = 'CALL get_user(?)'
+    console.log(req.teacher_id, 'profile');
+    const sql = "CALL get_user(?)";
+    db.query(sql, [req.teacher_id], (error, result) => {
+        if (error) throw error;
+        res.json(result[0][0]);
+    });
+};
+
+const getProfileInfoTeacher = (req, res) => {
+    console.log(req.query.user_id, 'profile');
+    const sql = "CALL get_user(?)";
     db.query(sql, [req.query.user_id], (error, result) => {
         if (error) throw error;
-        res.json(result[0])
-    })
-}
+        res.json(result[0][0]);
+    });
+};
+
+const getUsername = (req, res) => {
+    res.json({ username: req.username });
+};
 
 module.exports = {
     getUserType,
@@ -116,5 +146,7 @@ module.exports = {
     getInstitutions,
     createUser,
     login,
-    getProfileInfo
+    getProfileInfo,
+    getUsername,
+    getProfileInfoTeacher,
 };

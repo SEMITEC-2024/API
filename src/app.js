@@ -4,11 +4,17 @@ require('dotenv').config()
 const port = process.env.PORT
 const con = require('./controllers/account-controller')
 const accountRoutes = require('./routes/account-routes')
+const auth = require('./middleware/auth')
 const cors = require('cors')
-
-app.use(cors({origin: "*"}))
+const corsOptions = {
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true
+};
+app.use(cors(corsOptions))
 app.use(express.json());
-
+app.use('/teacher/*', auth.teacherGroupsAuth)
+app.use('/student/*', auth.studentAuth)
 app.use(accountRoutes);
 
 app.listen(port, () => {
