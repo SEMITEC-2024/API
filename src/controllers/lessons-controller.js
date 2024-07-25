@@ -45,7 +45,7 @@ const createLesson = (req, res) => {
     const { level_id, words, min_time, min_mistakes, name, description } = req.body;
     db.query(sql,[level_id, words, min_time, min_mistakes, name, description], (error) => {
         if (error) {
-            res.status(300).json({message: error})
+            return res.status(300).json({message: error})
         }
         res.json({message: "Leccion creada con exito"})
     })
