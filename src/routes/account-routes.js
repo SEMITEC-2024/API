@@ -32,7 +32,8 @@ router.get('/teacher/groups/info/student-profile', accountController.getProfileI
 router.get('/student/lessons/accuracy-history', lessonsController.getAccuracyHistory)
 router.get('/student/lessons/next-lesson', lessonsController.getNextLesson)
 router.post('/teacher/lessons/create', lessonsController.createLesson)
-router.get('/lessons/level', lessonsController.getLessonLevels)
+router.get('/lessons/levels', lessonsController.getLessonLevels)
+router.get('/lessons/lexemes', lessonsController.getLexemes)
 
 // groups-routes
 router.get('/teacher/groups', groupsController.getTeacherGroups)

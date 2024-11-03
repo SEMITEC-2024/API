@@ -30,14 +30,19 @@ const saveLessonMetrics = (req, res) => {
     })
 
 }
-const getLessonLevels = (req, res) => {
-    const sql = 'CALL get_leve()'
-    db.query(sql, (error, result) => {
-        if (error) {
-            res.status(300).json({message: error})
-        }
-        res.json(result[0])
-    })
+
+const getLessonLevels = async (req, res) => {
+    try {
+        const result = await db.pool.query(
+          'SELECT * FROM "Typing-Game-DB".get_level()'
+        );
+        res.json(result.rows);
+      } catch (error) {
+        console.log(error);
+        res
+          .status(500)
+          .json({ message: "Error al obtener los niveles de dificultad", error: error });
+      }
 }
 
 const createLesson = (req, res) => {
@@ -91,6 +96,21 @@ const getNextLesson = (req, res) => {
     })
 }
 
+//Lexemas opt
+const getLexemes = async (req, res) => {
+    try {
+      const result = await db.pool.query(
+        'SELECT * FROM "Typing-Game-DB".get_lexeme_all()'
+      );
+      res.json(result.rows);
+    } catch (error) {
+      console.log(error);
+      res
+        .status(500)
+        .json({ message: "Error al obtener los lexemas opcionales", error: error });
+    }
+};
+
 module.exports = {
     getLessons,
     getLesson,
@@ -101,4 +121,5 @@ module.exports = {
     getAccuracyHistory,
     getNextLesson,
     getAverageMetricsTeacher,
+    getLexemes
 }
