@@ -80,8 +80,8 @@ const getInstitutions = async (req, res) => {
   }
 };
 
-// create user and save it into the database
-const createUser = async (req, res) => {
+// create user with the teacher role and save it into the database
+const registerTeacher = async (req, res) => {
   try {
     const salt = bcrypt.genSaltSync(10);
     const {
@@ -89,9 +89,9 @@ const createUser = async (req, res) => {
       user_configuration_id,
       institution_id,
       district_id,
+      name,
       password,
       email,
-      name,
       other_signs,
     } = req.body;
 
@@ -108,6 +108,50 @@ const createUser = async (req, res) => {
       hash,
       email,
       other_signs || "not provided",
+    ];
+
+    const result = await db.pool.query(sql, values);
+    res.json({ message: "Usuario registrado con exito" });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ message: "Error al registrar el usuario", error: error });
+  }
+};
+
+// create user with the student role and save it into the database
+const registerStudent = async (req, res) => {
+  try {
+    const salt = bcrypt.genSaltSync(10);
+    const {
+      user_type_id,
+      user_configuration_id,
+      institution_id,
+      district_id,
+      name,
+      password,
+      email,
+      other_signs,
+      education_level_id,
+      date_birth,
+    } = req.body;
+
+    const hash = bcrypt.hashSync(password, salt);
+
+    const sql =
+      'SELECT * from "Typing-Game-DB".insert_student($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)';
+    const values = [
+      user_type_id,
+      user_configuration_id || 1,
+      institution_id,
+      district_id,
+      name,
+      hash,
+      email,
+      other_signs || "not provided",
+      education_level_id,
+      date_birth,
     ];
 
     const result = await db.pool.query(sql, values);
@@ -164,12 +208,10 @@ const login = async (req, res) => {
     res.status(401).json({ message: message });
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({
-        message: "Este usuario no se encuentra registrado",
-        error: error,
-      });
+    res.status(500).json({
+      message: "Este usuario no se encuentra registrado",
+      error: error,
+    });
   }
 };
 
@@ -181,31 +223,26 @@ const getProfileInfo = async (req, res) => {
     res.json(result.rows[0]);
   } catch (error) {
     console.log(error);
-    res
-      .status(500)
-      .json({
-        message: "Error al obtener la información del usuario",
-        error: error,
-      });
+    res.status(500).json({
+      message: "Error al obtener la información del usuario",
+      error: error,
+    });
   }
 };
 
-const getProfileInfoTeacher =  async (req, res) => {
+const getProfileInfoTeacher = async (req, res) => {
   console.log(req.query.user_id, "profile");
   try {
     const sql = 'SELECT * FROM "Typing-Game-DB".get_user($1)';
     const result = await db.pool.query(sql, [req.query.user_id]);
     res.json(result.rows[0]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error al obtener la información del usuario",
+      error: error,
+    });
   }
-    catch (error) {
-        console.log(error);
-        res
-        .status(500)
-        .json({
-            message: "Error al obtener la información del usuario",
-            error: error,
-        });
-    }
 };
 
 const getUsername = (req, res) => {
@@ -218,7 +255,8 @@ module.exports = {
   getProvinces,
   getCantons,
   getInstitutions,
-  createUser,
+  registerTeacher,
+  registerStudent,
   login,
   getProfileInfo,
   getUsername,
