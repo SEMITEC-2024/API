@@ -138,18 +138,66 @@ Se pueden obtener todas las instituciones de un país agregando el id del país 
         }
     ]
 
-### Registrar cuenta
-Se puede registar una cuenta utilizando el endpoint `/register` mediante el método `POST`.
+### Registrar usuario como tutor 
+Se puede registar una cuenta utilizando el endpoint `/register-teacher` mediante el método `POST`.
+El método requiere un body con la siguiente estructura:
+
+    {
+        "user_type_id": 2,
+        "user_configuration_id": {{randomConfigurationId}},
+        "institution_id": {{randomInstitutionId}},
+        "district_id": {{randomDistrictId}},
+        "name": "{{$randomFullName}}",
+        "password": "teacher",
+        "email": "{{$randomEmail}}",
+        "other_signs": "{{$randomStreetAddress}}"
+    }
+
+La estructura anterior puede ser probada con Postman agregado el siguiente script en el apartado `scripts pre-request`:
+    
+    const randomInstitution = Math.floor(Math.random() * 6) + 1;
+    const randomConfigurationId = Math.floor(Math.random() * 3) + 1;
+    const randomDistrictId = Math.floor(Math.random() * 459) + 1;
+
+    // save eviroment variables
+    pm.environment.set("randomInstitutionId", randomInstitution);
+    pm.environment.set("randomConfigurationId", randomConfigurationId);
+    pm.environment.set("randomDistrictId", randomDistrictId);
+    pm.environment.set("randomInstitution", randomInstitution);
+
+### Registrar usuario como estudiante
+Se puede registar una cuenta utilizando el endpoint `/register-teacher` mediante el método `POST`.
 El método requiere un body con la siguiente estructura:
 
     {
         "user_type_id": 1,
-        "institution_id": 1,
-        "district_id": 1,
-        "password": "contraseña",
-        "email": "user.email@algo.com",
-        "name": "nombre del usuario"
+        "user_configuration_id": {{randomConfigurationId}},
+        "institution_id": {{randomInstitutionId}},
+        "district_id": {{randomDistrictId}},
+        "name": "{{$randomFullName}}",
+        "password": "student",
+        "email": "{{$randomEmail}}",
+        "other_signs": "{{$randomStreetAddress}}",
+        "education_level_id": {{randomEducationLevelId}},
+        "date_birth": "{{pastDate}}"
     }
+
+La estructura anterior puede ser probada con Postman agregado el siguiente script en el apartado `scripts pre-request`:
+
+    const moment = require('moment')
+    const randomInstitution = Math.floor(Math.random() * 6) + 1;
+    const randomConfigurationId = Math.floor(Math.random() * 3) + 1;
+    const randomDistrictId = Math.floor(Math.random() * 459) + 1;
+    const randomEducationLevelId = Math.floor(Math.random() * 3) + 1;
+    let pastDate = pm.variables.replaceIn('{{$randomDatePast}}')
+    pastDate = moment(pastDate).format(("YYYY-MM-DD"))
+
+    // save enviroment variables
+    pm.environment.set("randomInstitutionId", randomInstitution);
+    pm.environment.set("randomConfigurationId", randomConfigurationId);
+    pm.environment.set("randomDistrictId", randomDistrictId);
+    pm.environment.set("randomEducationLevelId", randomEducationLevelId);
+    pm.variables.set("pastDate", pastDate);
 
 ### Autenticar inicio de sesión
 Se puede autenticar el inicio de sesión utilizando el endpoint `/login` mediante el método `POST`.
