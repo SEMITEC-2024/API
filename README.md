@@ -194,7 +194,7 @@ Además, si la autenticación fue exitosa, se retornara en el encabezado, un tok
     }
 
 ### Obtener lista de lecciones
-Se puede obtener la lista de todas las lecciones utiliando el endpoint `/lessons`.
+Se puede obtener la lista de todas las lecciones utilizando el endpoint `/lessons`.
 
     GET http://server-ip:3000/lessons
 
