@@ -10,7 +10,11 @@ router.get('/countries', accountController.getCountries)
 router.get('/provinces', accountController.getProvinces)
 router.get('/cantons', accountController.getCantons)
 router.get('/institutions', accountController.getInstitutions)
-router.post('/register', accountController.createUser)
+
+// register routes
+router.post('/register-teacher', accountController.registerTeacher)
+router.post('/register-student', accountController.registerStudent)
+
 router.post('/login', accountController.login)
 router.get('/teacher/profile', accountController.getProfileInfo)
 router.get('/student/profile', accountController.getProfileInfo)
