@@ -3,150 +3,224 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 // get user-account type
-const getUserType = (req, res) => {
-    const sql = "CALL get_user_type()";
-    db.query(sql, (error, result, fields) => {
-        if (error) throw error;
-        res.json(result[0]);
-    });
+const getUserType = async (req, res) => {
+  try {
+    const result = await db.pool.query(
+      'SELECT * from "Typing-Game-DB".get_user_type()'
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ message: "Error al obtener los tipos de usuario", error: error });
+  }
 };
 
-// get countries
-const getCountries = (req, res) => {
-    const sql = "CALL get_country()";
-    db.query(sql, (error, result) => {
-        if (error) throw error;
-        res.json(result[0]);
-    });
+// get all the countries
+const getCountries = async (req, res) => {
+  try {
+    const result = await db.pool.query(
+      'SELECT * from "Typing-Game-DB".get_country()'
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ message: "Error al obtener los paises", error: error });
+  }
 };
 
 // get provinces from country
-const getProvinces = (req, res) => {
-    const sql = "CALL get_province(?)";
-    db.query(sql, [req.query.country_id], (error, result) => {
-        if (error) throw error;
-        res.json(result[0]);
-    });
+const getProvinces = async (req, res) => {
+  try {
+    const result = await db.pool.query(
+      'SELECT * from "Typing-Game-DB".get_province($1)',
+      [req.query.country_id]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ message: "Error al obtener las provincias", error: error });
+  }
 };
 
 // get cantons from province
-const getCantons = (req, res) => {
-    const sql = "CALL get_cantons(?)";
-    db.query(sql, [req.query.province_id], (error, result) => {
-        if (error) throw error;
-        res.json(result[0]);
-    });
+const getCantons = async (req, res) => {
+  try {
+    const result = await db.pool.query(
+      'SELECT * from "Typing-Game-DB".get_canton($1)',
+      [req.query.province_id]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ message: "Error al obtener los cantones", error: error });
+  }
 };
 
 // get institutions from country
-const getInstitutions = (req, res) => {
-    const sql = "CALL get_institution(?)";
-    db.query(sql, [req.query.country_id], (error, result) => {
-        if (error) throw error;
-        res.json(result[0]);
-    });
+const getInstitutions = async (req, res) => {
+  try {
+    const result = await db.pool.query(
+      'SELECT * from "Typing-Game-DB".get_institution($1)',
+      [req.query.country_id]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ message: "Error al obtener las instituciones", error: error });
+  }
 };
 
 // create user and save it into the database
-const createUser = (req, res) => {
-    try {
-            console.log(req.body)
+const createUser = async (req, res) => {
+  try {
+    const salt = bcrypt.genSaltSync(10);
+    const {
+      user_type_id,
+      user_configuration_id,
+      institution_id,
+      district_id,
+      password,
+      email,
+      name,
+      other_signs,
+    } = req.body;
 
-        const salt = bcrypt.genSaltSync(10);
-        const { user_type_id, institution_id, district_id, password, email, name } =
-            req.body;
+    const hash = bcrypt.hashSync(password, salt);
 
-        const hash = bcrypt.hashSync(password, salt);
-        const sql = `CALL insert_user(?, ?, ?, ?, ?, ?, ?)`;
+    const sql =
+      'SELECT * from "Typing-Game-DB".insert_teacher($1, $2, $3, $4, $5, $6, $7, $8)';
+    const values = [
+      user_type_id,
+      user_configuration_id || 1,
+      institution_id,
+      district_id,
+      name,
+      hash,
+      email,
+      other_signs || "not provided",
+    ];
 
-        db.query(
-            sql,
-            [user_type_id, institution_id, district_id, hash, email, name, salt],
-            (error) => {
-                if (error) {
-                    console.log(error)
-                };
-                res.json({ message: "Usuario registrado con exito"});
-            }
-        );
-    } catch (error) {
-        console.log(error);
-    }
+    const result = await db.pool.query(sql, values);
+    res.json({ message: "Usuario registrado con exito" });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ message: "Error al registrar el usuario", error: error });
+  }
 };
 
 // gets the encrypted password from bd and compares it
-const login = (req, res) => {
-    const { password, email } = req.body;
-    const sql = "CALL login(?)";
-    db.query(sql, [email], (error, result) => {
-        if (error) throw error;
-        let permission = false;
-        let message = "Este usuario no se encuentra registrado";
-        let token = "";
-        let user_type = "";
-        if (result[0].length !== 0) {
-            const rows = result[0][0];
-            permission = bcrypt.compareSync(password, rows.password);
-            if (permission === true) {
-                user_type = rows.user_type_name;
-                message = "Usuario autenticado con éxito";
-                token = jwt.sign(
-                    {
-                        user_id: `${rows.user_id}`,
-                        user_type_id: `${rows.user_type_id}`,
-                        username: `${rows.username}`,
-                        user_type_name: `${rows.user_type_name}`,
-                    },
-                    process.env.TOKEN_KEY
-                );
-                res.set("Access-Control-Expose-Headers", "*");
-                return res.header("auth-token", token).json({
-                    permission: `${permission}`,
-                    message: `${message}`,
-                    user_type_name: `${user_type}`,
-                });
-            }
-            message = "Contraseña incorrecta";
-            return res.status(401).json({
-                permission: `${permission}`,
-                message: `${message}`,
-                user_type_name: `${user_type}`,
-            });
-        }
-    });
+const login = async (req, res) => {
+  const { password, email } = req.body;
+
+  const sql = "SELECT * FROM login($1)";
+  try {
+    const result = await db.pool.query(sql, [email]);
+    let permission = false;
+    let message = "Este usuario no se encuentra registrado";
+    let token = "";
+    let user_type = "";
+    console.log(result.rows);
+    if (result.rowCount !== 0) {
+      const rows = result.rows[0]; // index 0 of the rows result
+      permission = bcrypt.compareSync(password, rows.password);
+      if (permission === true) {
+        user_type = rows.user_type_name;
+        message = "Usuario autenticado con éxito";
+        token = jwt.sign(
+          {
+            user_id: `${rows.user_id}`,
+            user_type_id: `${rows.user_type_id}`,
+            username: `${rows.username}`,
+            user_type_name: `${rows.user_type_name}`,
+          },
+          process.env.TOKEN_KEY
+        );
+        res.set("Access-Control-Expose-Headers", "*");
+        return res.header("auth-token", token).json({
+          permission: `${permission}`,
+          message: `${message}`,
+          user_type_name: `${user_type}`,
+        });
+      }
+      message = "Contraseña incorrecta";
+      return res.status(401).json({
+        permission: `${permission}`,
+        message: `${message}`,
+        user_type_name: `${user_type}`,
+      });
+    }
+    res.status(401).json({ message: message });
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({
+        message: "Este usuario no se encuentra registrado",
+        error: error,
+      });
+  }
 };
 
-const getProfileInfo = (req, res) => {
-    console.log(req.teacher_id, 'profile');
-    const sql = "CALL get_user(?)";
-    db.query(sql, [req.teacher_id], (error, result) => {
-        if (error) throw error;
-        res.json(result[0][0]);
-    });
+// get the profile information of the user
+const getProfileInfo = async (req, res) => {
+  const sql = "SELECT * FROM get_user($1)";
+  try {
+    const result = await db.pool.query(sql, [req.user_id]);
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({
+        message: "Error al obtener la información del usuario",
+        error: error,
+      });
+  }
 };
 
-const getProfileInfoTeacher = (req, res) => {
-    console.log(req.query.user_id, 'profile');
-    const sql = "CALL get_user(?)";
-    db.query(sql, [req.query.user_id], (error, result) => {
-        if (error) throw error;
-        res.json(result[0][0]);
-    });
+const getProfileInfoTeacher =  async (req, res) => {
+  console.log(req.query.user_id, "profile");
+  try {
+    const sql = 'SELECT * FROM "Typing-Game-DB".get_user($1)';
+    const result = await db.pool.query(sql, [req.query.user_id]);
+    res.json(result.rows[0]);
+  }
+    catch (error) {
+        console.log(error);
+        res
+        .status(500)
+        .json({
+            message: "Error al obtener la información del usuario",
+            error: error,
+        });
+    }
 };
 
 const getUsername = (req, res) => {
-    res.json({ username: req.username });
+  res.json({ username: req.username });
 };
 
 module.exports = {
-    getUserType,
-    getCountries,
-    getProvinces,
-    getCantons,
-    getInstitutions,
-    createUser,
-    login,
-    getProfileInfo,
-    getUsername,
-    getProfileInfoTeacher,
+  getUserType,
+  getCountries,
+  getProvinces,
+  getCantons,
+  getInstitutions,
+  createUser,
+  login,
+  getProfileInfo,
+  getUsername,
+  getProfileInfoTeacher,
 };
