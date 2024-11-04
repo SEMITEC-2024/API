@@ -45,15 +45,42 @@ const getLessonLevels = async (req, res) => {
       }
 }
 
-const createLesson = (req, res) => {
-    const sql = 'CALL create_lesson(?, ?, ?, ?, ?, ?)'
-    const { level_id, words, min_time, min_mistakes, name, description } = req.body;
-    db.query(sql,[level_id, words, min_time, min_mistakes, name, description], (error) => {
-        if (error) {
-            return res.status(300).json({message: error})
-        }
-        res.json({message: "Leccion creada con exito"})
-    })
+
+const createLesson = async (req, res) => {
+    try {
+        const {
+            level_id,
+            teacher_id,
+            content,
+            iterations,
+            max_time,
+            max_mistakes,
+            name,
+            description,
+            shared
+        } = req.body;
+        const sql =
+          'SELECT * from "Typing-Game-DB".insert_lesson($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)';
+        const values = [
+            level_id,
+            teacher_id,
+            content,
+            iterations,
+            max_time,
+            max_mistakes,
+            name,
+            description,
+            1,
+            shared 
+          ];
+        const result = await db.pool.query(sql, values);
+        res.json(result.rows);
+      } catch (error) {
+        console.log(error);
+        res
+          .status(500)
+          .json({ message: "Error al crear la lección", error: error });
+      }
 }
 
 const getAverageMetrics = (req, res) => {

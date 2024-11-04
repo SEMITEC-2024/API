@@ -31,7 +31,7 @@ router.get('/teacher/groups/info/student-info', lessonsController.getAverageMetr
 router.get('/teacher/groups/info/student-profile', accountController.getProfileInfoTeacher)
 router.get('/student/lessons/accuracy-history', lessonsController.getAccuracyHistory)
 router.get('/student/lessons/next-lesson', lessonsController.getNextLesson)
-router.post('/teacher/lessons/create', lessonsController.createLesson)
+router.post('/lessons/create', lessonsController.createLesson)//Missing /teacher for testing
 router.get('/lessons/levels', lessonsController.getLessonLevels)
 router.get('/lessons/lexemes', lessonsController.getLexemes)
 
