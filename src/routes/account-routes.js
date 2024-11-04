@@ -27,14 +27,15 @@ router.get('/teacher/groups/info/student-info', lessonsController.getAverageMetr
 router.get('/teacher/groups/info/student-profile', accountController.getProfileInfoTeacher)
 router.get('/student/lessons/accuracy-history', lessonsController.getAccuracyHistory)
 router.get('/student/lessons/next-lesson', lessonsController.getNextLesson)
-router.post('/lessons/create', lessonsController.createLesson)//Missing /teacher for testing
+router.post('/lessons/create', lessonsController.createLesson)//New - Missing /teacher for testing
 router.get('/lessons/levels', lessonsController.getLessonLevels)//New
 router.get('/lessons/lexemes', lessonsController.getLexemes)//New
-router.get('/lessons/total', lessonsController.getTotalLessonsPublic)//New
+router.get('/lessons/public/total', lessonsController.getLessonsPublicCount)//New
 router.post('/lessons/public', lessonsController.getLessonsPublicPerPage)//New
 
 // groups-routes
 router.get('/teacher/groups', groupsController.getTeacherGroups)
+router.get('/teacher/groups/total', groupsController.getGroupTeacherCount)//New
 router.post('/teacher/groups', groupsController.getTeacherGroupsPerPage)//New
 router.get('/student/groups/members', groupsController.getGroupMembers)
 router.get('/teacher/groups/members', groupsController.getGroupMembers)

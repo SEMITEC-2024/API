@@ -10,6 +10,22 @@ const getTeacherGroups = (req, res) => {
     });
 };
 
+//Number of groups that a teacher has
+const getGroupTeacherCount = async (req, res) => {
+    try {
+      const result = await db.pool.query(
+        'SELECT * from "Typing-Game-DB".get_group_teacher_count($1)',
+        [req.query.var_teacher_id]
+      );
+      res.json(result.rows);
+    } catch (error) {
+      console.log(error);
+      res
+        .status(500)
+        .json({ message: "Error al obtener la cantidad de grupos", error: error });
+    }
+};
+
 //Groups by teacher with pagination
 const getTeacherGroupsPerPage = async (req, res) => {
     const {teacher_id , var_page_number , var_page_size } = req.body;
@@ -23,7 +39,7 @@ const getTeacherGroupsPerPage = async (req, res) => {
       console.log(error);
       res
       .status(500)
-      .json({ message: "Error al obtener la informaciÃ³n de los grupos del profesor", error: error });
+      .json({ message: "Error al obtener la información de los grupos del profesor", error: error });
     }
 };
 
@@ -96,5 +112,6 @@ module.exports = {
     createGroup,
     joinGroup,
     getGroupInfo,
+    getGroupTeacherCount,
     getTeacherGroupsPerPage
 };

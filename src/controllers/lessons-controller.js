@@ -138,13 +138,14 @@ const getLexemes = async (req, res) => {
     }
 };
 
-const getTotalLessonsPublic = async (req, res) => {
+//Number of public lessons available
+const getLessonsPublicCount = async (req, res) => {
     try {
         const result = await db.pool.query(
-            'SELECT COUNT(*) AS total_lessons FROM "Typing-Game-DB".lesson WHERE shared = B\'1\''
-        );
-        const totalLessons = result.rows[0].total_lessons;
-        res.json({ total: parseInt(totalLessons, 10) });  // Devuelve el total como un número
+            'SELECT * FROM "Typing-Game-DB".get_lessons_public_count()',
+          );
+        const totalLessons = result.rows[0];
+        res.json(totalLessons);  // Devuelve el total como un número
         } catch (error) {
             console.error(error);
             res.status(500).json({
@@ -188,6 +189,6 @@ module.exports = {
     getNextLesson,
     getAverageMetricsTeacher,
     getLexemes,
-    getTotalLessonsPublic,
+    getLessonsPublicCount,
     getLessonsPublicPerPage
 }
