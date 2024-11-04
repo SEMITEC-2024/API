@@ -138,6 +138,45 @@ const getLexemes = async (req, res) => {
     }
 };
 
+const getTotalLessonsPublic = async (req, res) => {
+    try {
+        const result = await db.pool.query(
+            'SELECT COUNT(*) AS total_lessons FROM "Typing-Game-DB".lesson WHERE shared = B\'1\''
+        );
+        const totalLessons = result.rows[0].total_lessons;
+        res.json({ total: parseInt(totalLessons, 10) });  // Devuelve el total como un número
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({
+                message: "Error al obtener el total de lecciones",
+                error: error
+            });
+        }
+    };
+
+  const getLessonsPublicPerPage  = async (req, res) => {
+    const { var_page_number , var_page_size } = req.body;
+    try {
+        if (!var_page_number || !var_page_size) {
+            return res.status(400).json({ message: "Los parámetros de paginación son requeridos." });
+        }
+        if (isNaN(var_page_number) || isNaN(var_page_size) || var_page_number < 1 || var_page_size < 1) {
+            return res.status(400).json({ message: "Los parámetros de paginación son inválidos." });
+        }
+        const result = await db.pool.query(
+            'SELECT * from "Typing-Game-DB".get_lessons_public_per_page($1, $2)',
+            [var_page_number, var_page_size]
+        );
+
+        res.json(result.rows);
+    } catch (error) {
+      console.log(error);
+      res
+      .status(500)
+      .json({ message: "Error al obtener las lecciones", error: error });
+    }
+  };
+
 module.exports = {
     getLessons,
     getLesson,
@@ -148,5 +187,7 @@ module.exports = {
     getAccuracyHistory,
     getNextLesson,
     getAverageMetricsTeacher,
-    getLexemes
+    getLexemes,
+    getTotalLessonsPublic,
+    getLessonsPublicPerPage
 }
