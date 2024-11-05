@@ -1,7 +1,9 @@
 # SEMITEC API
+
 Aprendizaje de la mecanografía enfocado en personas con discapacidad visual
 
 ### Obtener tipos de cuentas
+
 Para obtener los tipos de cuentas se debe utilizar el endpoint `/account-type`.
 
     GET http://server-ip:3000/account-type
@@ -18,6 +20,7 @@ Para obtener los tipos de cuentas se debe utilizar el endpoint `/account-type`.
     ]
 
 ### Obtener lista de países
+
 Para obtener la lista de países se debe utilizar el endpoint `/countries`.
 
     GET http://server-ip:3000/countries
@@ -30,6 +33,7 @@ Para obtener la lista de países se debe utilizar el endpoint `/countries`.
     ]
 
 ### Obtener todas las provincias de un país
+
 Se pueden obtener todas las provincas de un país agregando el id del país como parámetro `/provinces?country_id=1`
 
     GET http://server-ip:3000/provinces?country_id=1
@@ -65,8 +69,8 @@ Se pueden obtener todas las provincas de un país agregando el id del país como
         }
     ]
 
-
 ### Obtener todos los cantones de una provincia
+
 Se pueden obtener todos los cantones de una provincia agregando el id de la provincia como parámetro `/cantons?province_id=3`
 
     GET http://server-ip:3000/cantons?province_id=3
@@ -106,7 +110,29 @@ Se pueden obtener todos los cantones de una provincia agregando el id de la prov
         }
     ]
 
+### Obtener todos los distritos de un cantón
+
+Se pueden obtener todos los cantones de una provincia agregando el id de la provincia como parámetro `/districts?canton_id=1`
+
+    GET http://localhost:5001/districts?canton_id=1
+
+[
+{
+"district_id": 1,
+"name": "Pacayas"
+},
+{
+"district_id": 2,
+"name": "Cervantes"
+},
+{
+"district_id": 3,
+"name": "Capellades"
+}
+]
+
 ### Obtener todas las instituciones de un país
+
 Se pueden obtener todas las instituciones de un país agregando el id del país como parámetro `/institutions?country_id=1`
 
     GET http://server-ip:3000/institutions?country_id=1
@@ -138,7 +164,16 @@ Se pueden obtener todas las instituciones de un país agregando el id del país 
         }
     ]
 
-### Registrar usuario como tutor 
+Se puede utilizar la suguiente configuración en Postman para realizar pruebas con distritos por cantón aleatorio
+
+    GET http://localhost:5001/districts?canton_id={{randomCantonId}}
+
+    // scripts pre-request
+    const randomCantonId = Math.floor(Math.random() * 81) + 1;
+    pm.variables.set("randomCantonId",randomCantonId)
+
+### Registrar usuario como tutor
+
 Se puede registar una cuenta utilizando el endpoint `/register-teacher` mediante el método `POST`.
 El método requiere un body con la siguiente estructura:
 
@@ -154,7 +189,7 @@ El método requiere un body con la siguiente estructura:
     }
 
 La estructura anterior puede ser probada con Postman agregado el siguiente script en el apartado `scripts pre-request`:
-    
+
     const randomInstitution = Math.floor(Math.random() * 6) + 1;
     const randomConfigurationId = Math.floor(Math.random() * 3) + 1;
     const randomDistrictId = Math.floor(Math.random() * 459) + 1;
@@ -166,6 +201,7 @@ La estructura anterior puede ser probada con Postman agregado el siguiente scrip
     pm.environment.set("randomInstitution", randomInstitution);
 
 ### Registrar usuario como estudiante
+
 Se puede registar una cuenta utilizando el endpoint `/register-teacher` mediante el método `POST`.
 El método requiere un body con la siguiente estructura:
 
@@ -200,6 +236,7 @@ La estructura anterior puede ser probada con Postman agregado el siguiente scrip
     pm.variables.set("pastDate", pastDate);
 
 ### Autenticar inicio de sesión
+
 Se puede autenticar el inicio de sesión utilizando el endpoint `/login` mediante el método `POST`.
 El método requiere un body con la siguiente estructura:
 
@@ -231,7 +268,7 @@ Se retornará un `JSON` que contiene el resultado de la autenticación y un mens
 Además, si la autenticación fue exitosa, se retornara en el encabezado, un token `jwt` con la siguiente estructura:
 
     auth-token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyLWlkIjoiMTYiLCJ1c2VyX3R5cGVfaWQiOiIxIiwidXNlcm5hbWUiOiJQZXBlIENhbW90ZXMiLCJ1c2VyX3R5cGVfbmFtZSI6IkVzdHVkaWFudGUiLCJpYXQiOjE3MTQ4Mjg4NTJ9.RxJ-oPBGskj24kwQxhTmlHlhSjQmEzGY6wGNuWR6f0k
-    
+
     PAYLOAD: DATA
     {
         "user-id": "16",
@@ -286,6 +323,7 @@ Se puede obtener la lista de todas las lecciones utilizando el endpoint `/lesson
     ]
 
 ### Obtener una lección específica
+
 Se puede obtener los datos de una lección especifica agregando el id de la lección como parámetro `/lesson?lesson_id=1`
 
     GET http://server-ip:3000/lessons?lesson_id=1
@@ -301,6 +339,7 @@ Se puede obtener los datos de una lección especifica agregando el id de la lecc
     ]
 
 ### Obtener grupos por profesor
+
 Se pueden obtener los grupos por profesor agregando el id del profesor como parámetro `/teacher/groups?teacher_id=11`
 
     GET http://server-ip:3000/teacher/groups?teacher_id=11
@@ -315,6 +354,7 @@ Se pueden obtener los grupos por profesor agregando el id del profesor como par�
     ]
 
 ### Obtener información del perfil de usuario
+
 Se puede obtener la información del perfil agregando el id del usuario como parámetro `/profile?user_id=1`.
 
     GET http://25.37.76.172:5000/profile?user_id=1
@@ -333,8 +373,8 @@ Se puede obtener la información del perfil agregando el id del usuario como par
         }
     ]
 
-
 ### Obtener estudiantes por grupo
+
 Se pueden obtener los estudiantes de un grupo agregando el id del grupo como parámetro `/group/students?group_id=3`
 
     GET http://25.37.76.172:5000/group/students?group_id=3

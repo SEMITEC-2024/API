@@ -9,6 +9,7 @@ router.get('/account-type', accountController.getUserType)
 router.get('/countries', accountController.getCountries)
 router.get('/provinces', accountController.getProvinces)
 router.get('/cantons', accountController.getCantons)
+router.get('/districts', accountController.getDistricts)
 router.get('/institutions', accountController.getInstitutions)
 
 // register routes
