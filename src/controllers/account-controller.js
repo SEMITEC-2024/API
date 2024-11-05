@@ -64,6 +64,24 @@ const getCantons = async (req, res) => {
   }
 };
 
+
+// get districts from canton
+const getDistricts = async (req, res) => {
+  try {
+    const result = await db.pool.query(
+      'SELECT * from "Typing-Game-DB".get_district($1)',
+      [req.query.canton_id]
+    );
+    res.json(result.rows);
+
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ message: "Error al obtener los distritos", error: error });
+  }
+}
+
 // get institutions from country
 const getInstitutions = async (req, res) => {
   try {
@@ -261,4 +279,5 @@ module.exports = {
   getProfileInfo,
   getUsername,
   getProfileInfoTeacher,
+  getDistricts,
 };
