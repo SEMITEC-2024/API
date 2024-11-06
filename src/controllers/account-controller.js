@@ -64,7 +64,6 @@ const getCantons = async (req, res) => {
   }
 };
 
-
 // get districts from canton
 const getDistricts = async (req, res) => {
   try {
@@ -73,14 +72,13 @@ const getDistricts = async (req, res) => {
       [req.query.canton_id]
     );
     res.json(result.rows);
-
   } catch (error) {
     console.log(error);
     res
       .status(500)
       .json({ message: "Error al obtener los distritos", error: error });
   }
-}
+};
 
 // get institutions from country
 const getInstitutions = async (req, res) => {
@@ -95,6 +93,24 @@ const getInstitutions = async (req, res) => {
     res
       .status(500)
       .json({ message: "Error al obtener las instituciones", error: error });
+  }
+};
+
+// get educational levels
+const getEducationLevels = async (req, res) => {
+  try {
+    const result = await db.pool.query(
+      'SELECT * from "Typing-Game-DB".get_education_level()'
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({
+        message: "Error al obtener los niveles educativos",
+        error: error,
+      });
   }
 };
 
@@ -280,4 +296,5 @@ module.exports = {
   getUsername,
   getProfileInfoTeacher,
   getDistricts,
+  getEducationLevels,
 };

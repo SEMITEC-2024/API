@@ -11,6 +11,7 @@ router.get('/provinces', accountController.getProvinces)
 router.get('/cantons', accountController.getCantons)
 router.get('/districts', accountController.getDistricts)
 router.get('/institutions', accountController.getInstitutions)
+router.get('/education-levels', accountController.getEducationLevels)
 
 // register routes
 router.post('/register-teacher', accountController.registerTeacher)
