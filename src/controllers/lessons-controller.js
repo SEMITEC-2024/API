@@ -81,6 +81,69 @@ const createLesson = async (req, res) => {
           .json({ message: "Error al crear la lección", error: error });
       }
 }
+const assignLesson = async (req, res) => {
+    try{
+        const { lesson_id, students_ids} = req.body;
+        // Ensure students_ids is an array of integers
+        if (!Array.isArray(students_ids) || !students_ids.every(Number.isInteger)) {
+            return res.status(400).json({ message: "Debe ser un arreglo numérico" }); }
+        const sql =
+          'SELECT * from "Typing-Game-DB".assign_lesson($1, $2)';
+        const values = [
+            lesson_id,
+            students_ids
+          ];
+        const result = await db.pool.query(sql, values);
+        res.json(result.rows);
+    } catch (error) {
+        console.log(error);
+        res
+          .status(500)
+          .json({ message: "Error al asignar la lección", error: error });
+    }
+}
+
+const createAssignLesson = async (req, res) => {
+    try {
+        const {
+            level_id,
+            content,
+            iterations,
+            max_time,
+            max_mistakes,
+            name,
+            description,
+            shared,
+            students_ids
+        } = req.body;
+
+        if (!Array.isArray(students_ids) || !students_ids.every(Number.isInteger)) {
+            return res.status(400).json({ message: "Debe ser un arreglo numérico" }); }
+
+        const sql =
+          'SELECT * from "Typing-Game-DB".create_and_assign_lesson($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)';
+        const values = [
+            level_id,
+            req.teacher_id,
+            content,
+            iterations,
+            max_time,
+            max_mistakes,
+            name,
+            description,
+            1,
+            shared,
+            students_ids
+          ];
+        const result = await db.pool.query(sql, values);
+        res.json(result.rows);
+      } catch (error) {
+        console.log(error);
+        res
+          .status(500)
+          .json({ message: "Error al crear y asignar la lección", error: error });
+      }   
+}
 
 const getAverageMetrics = (req, res) => {
     const sql = 'CALL get_average_metrics(?)'
@@ -182,6 +245,8 @@ module.exports = {
     getLesson,
     saveLessonMetrics,
     createLesson,
+    assignLesson,
+    createAssignLesson,
     getLessonLevels,
     getAverageMetrics,
     getAccuracyHistory,

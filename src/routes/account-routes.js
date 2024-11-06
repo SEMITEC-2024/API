@@ -27,7 +27,9 @@ router.get('/teacher/groups/info/student-info', lessonsController.getAverageMetr
 router.get('/teacher/groups/info/student-profile', accountController.getProfileInfoTeacher)
 router.get('/student/lessons/accuracy-history', lessonsController.getAccuracyHistory)
 router.get('/student/lessons/next-lesson', lessonsController.getNextLesson)
-router.post('teacher/lessons/create', lessonsController.createLesson)//New
+router.post('/teacher/lessons/create', lessonsController.createLesson)//New
+router.post('/teacher/lessons/create/assign', lessonsController.assignLesson)//New)
+router.post('/teacher/lesson/create/assign/bulk', lessonsController.createAssignLesson)//New
 router.get('/lessons/levels', lessonsController.getLessonLevels)//New
 router.get('/lessons/lexemes', lessonsController.getLexemes)//New
 router.get('/lessons/public/total', lessonsController.getLessonsPublicCount)//New
