@@ -50,7 +50,6 @@ const createLesson = async (req, res) => {
     try {
         const {
             level_id,
-            teacher_id,
             content,
             iterations,
             max_time,
@@ -63,7 +62,7 @@ const createLesson = async (req, res) => {
           'SELECT * from "Typing-Game-DB".insert_lesson($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)';
         const values = [
             level_id,
-            teacher_id,
+            req.teacher_id,
             content,
             iterations,
             max_time,

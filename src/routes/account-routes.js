@@ -27,7 +27,7 @@ router.get('/teacher/groups/info/student-info', lessonsController.getAverageMetr
 router.get('/teacher/groups/info/student-profile', accountController.getProfileInfoTeacher)
 router.get('/student/lessons/accuracy-history', lessonsController.getAccuracyHistory)
 router.get('/student/lessons/next-lesson', lessonsController.getNextLesson)
-router.post('/lessons/create', lessonsController.createLesson)//New - Missing /teacher for testing
+router.post('teacher/lessons/create', lessonsController.createLesson)//New
 router.get('/lessons/levels', lessonsController.getLessonLevels)//New
 router.get('/lessons/lexemes', lessonsController.getLexemes)//New
 router.get('/lessons/public/total', lessonsController.getLessonsPublicCount)//New
@@ -37,10 +37,11 @@ router.post('/lessons/public', lessonsController.getLessonsPublicPerPage)//New
 router.get('/teacher/groups', groupsController.getTeacherGroups)
 router.get('/teacher/groups/total', groupsController.getGroupTeacherCount)//New
 router.post('/teacher/groups', groupsController.getTeacherGroupsPerPage)//New
-router.get('/student/groups/members', groupsController.getGroupMembers)
-router.get('/teacher/groups/members', groupsController.getGroupMembers)
+//router.get('/student/groups/members', groupsController.getGroupMembers) PENDING
+router.get('/teacher/groups/members/total', groupsController.getGroupStudentsCount)//New
+router.post('/teacher/groups/members', groupsController.getGroupStudents)//New
 router.post('/teacher/groups/create', groupsController.createGroup)
 router.get('/teacher/groups/info', groupsController.getGroupInfo)
 router.get('/student/groups/', groupsController.getStudentGroups)
 router.post('/student/groups/join', groupsController.joinGroup)
-module.exports =  router 
+module.exports = router 
