@@ -120,7 +120,6 @@ const registerTeacher = async (req, res) => {
     const salt = bcrypt.genSaltSync(10);
     const {
       user_type_id,
-      user_configuration_id,
       institution_id,
       district_id,
       name,
@@ -132,10 +131,9 @@ const registerTeacher = async (req, res) => {
     const hash = bcrypt.hashSync(password, salt);
 
     const sql =
-      'SELECT * from "Typing-Game-DB".insert_teacher($1, $2, $3, $4, $5, $6, $7, $8)';
+      'SELECT * from "Typing-Game-DB".insert_teacher($1, $2, $3, $4, $5, $6, $7)';
     const values = [
       user_type_id,
-      user_configuration_id || 1,
       institution_id,
       district_id,
       name,
@@ -160,7 +158,6 @@ const registerStudent = async (req, res) => {
     const salt = bcrypt.genSaltSync(10);
     const {
       user_type_id,
-      user_configuration_id,
       institution_id,
       district_id,
       name,
@@ -174,10 +171,9 @@ const registerStudent = async (req, res) => {
     const hash = bcrypt.hashSync(password, salt);
 
     const sql =
-      'SELECT * from "Typing-Game-DB".insert_student($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)';
+      'SELECT * from "Typing-Game-DB".insert_student($1, $2, $3, $4, $5, $6, $7, $8, $9)';
     const values = [
       user_type_id,
-      user_configuration_id || 1,
       institution_id,
       district_id,
       name,
