@@ -1,5 +1,7 @@
 const { Router }  = require('express')
 const router = Router()
+const schemes = require('../schemes/register-scheme')
+const validateScheme = require('../middleware/scheme-validation')
 const accountController = require('../controllers/account-controller');
 const lessonsController = require('../controllers/lessons-controller')
 const groupsController = require('../controllers/groups-controller')
@@ -14,8 +16,8 @@ router.get('/institutions', accountController.getInstitutions)
 router.get('/education-levels', accountController.getEducationLevels)
 
 // register routes
-router.post('/register-teacher', accountController.registerTeacher)
-router.post('/register-student', accountController.registerStudent)
+router.post('/register-teacher', validateScheme(schemes.registerTeacherScheme), accountController.registerTeacher)
+router.post('/register-student', validateScheme(schemes.registerStudentScheme),accountController.registerStudent)
 
 router.post('/login', accountController.login)
 router.get('/teacher/profile', accountController.getProfileInfo)
