@@ -50,7 +50,6 @@ const createLesson = async (req, res) => {
     try {
         const {
             level_id,
-            teacher_id,
             content,
             iterations,
             max_time,
@@ -63,7 +62,7 @@ const createLesson = async (req, res) => {
           'SELECT * from "Typing-Game-DB".insert_lesson($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)';
         const values = [
             level_id,
-            teacher_id,
+            req.teacher_id,
             content,
             iterations,
             max_time,
@@ -81,6 +80,69 @@ const createLesson = async (req, res) => {
           .status(500)
           .json({ message: "Error al crear la lección", error: error });
       }
+}
+const assignLesson = async (req, res) => {
+    try{
+        const { lesson_id, students_ids} = req.body;
+        // Ensure students_ids is an array of integers
+        if (!Array.isArray(students_ids) || !students_ids.every(Number.isInteger)) {
+            return res.status(400).json({ message: "Debe ser un arreglo numérico" }); }
+        const sql =
+          'SELECT * from "Typing-Game-DB".assign_lesson($1, $2)';
+        const values = [
+            lesson_id,
+            students_ids
+          ];
+        const result = await db.pool.query(sql, values);
+        res.json(result.rows);
+    } catch (error) {
+        console.log(error);
+        res
+          .status(500)
+          .json({ message: "Error al asignar la lección", error: error });
+    }
+}
+
+const createAssignLesson = async (req, res) => {
+    try {
+        const {
+            level_id,
+            content,
+            iterations,
+            max_time,
+            max_mistakes,
+            name,
+            description,
+            shared,
+            students_ids
+        } = req.body;
+
+        if (!Array.isArray(students_ids) || !students_ids.every(Number.isInteger)) {
+            return res.status(400).json({ message: "Debe ser un arreglo numérico" }); }
+
+        const sql =
+          'SELECT * from "Typing-Game-DB".create_and_assign_lesson($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)';
+        const values = [
+            level_id,
+            req.teacher_id,
+            content,
+            iterations,
+            max_time,
+            max_mistakes,
+            name,
+            description,
+            1,
+            shared,
+            students_ids
+          ];
+        const result = await db.pool.query(sql, values);
+        res.json(result.rows);
+      } catch (error) {
+        console.log(error);
+        res
+          .status(500)
+          .json({ message: "Error al crear y asignar la lección", error: error });
+      }   
 }
 
 const getAverageMetrics = (req, res) => {
@@ -138,15 +200,59 @@ const getLexemes = async (req, res) => {
     }
 };
 
+//Number of public lessons available
+const getLessonsPublicCount = async (req, res) => {
+    try {
+        const result = await db.pool.query(
+            'SELECT * FROM "Typing-Game-DB".get_lessons_public_count()',
+          );
+        const totalLessons = result.rows[0];
+        res.json(totalLessons);  // Devuelve el total como un número
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({
+                message: "Error al obtener el total de lecciones",
+                error: error
+            });
+        }
+    };
+
+  const getLessonsPublicPerPage  = async (req, res) => {
+    const { var_page_number , var_page_size } = req.body;
+    try {
+        if (!var_page_number || !var_page_size) {
+            return res.status(400).json({ message: "Los parámetros de paginación son requeridos." });
+        }
+        if (isNaN(var_page_number) || isNaN(var_page_size) || var_page_number < 1 || var_page_size < 1) {
+            return res.status(400).json({ message: "Los parámetros de paginación son inválidos." });
+        }
+        const result = await db.pool.query(
+            'SELECT * from "Typing-Game-DB".get_lessons_public_per_page($1, $2)',
+            [var_page_number, var_page_size]
+        );
+
+        res.json(result.rows);
+    } catch (error) {
+      console.log(error);
+      res
+      .status(500)
+      .json({ message: "Error al obtener las lecciones", error: error });
+    }
+  };
+
 module.exports = {
     getLessons,
     getLesson,
     saveLessonMetrics,
     createLesson,
+    assignLesson,
+    createAssignLesson,
     getLessonLevels,
     getAverageMetrics,
     getAccuracyHistory,
     getNextLesson,
     getAverageMetricsTeacher,
-    getLexemes
+    getLexemes,
+    getLessonsPublicCount,
+    getLessonsPublicPerPage
 }
