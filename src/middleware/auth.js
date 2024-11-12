@@ -23,6 +23,10 @@ const teacherGroupsAuth = (req, res, next) => {
                 message: "Sin autorizacion",
             });
         }
+    } else {
+        res.status(401).json({
+            message: "Sin autorizacion",
+        });
     }
 };
 
@@ -49,6 +53,10 @@ const studentAuth = (req, res, next) => {
                 message: "Sin autorizacion",
             });
         }
+    } else {
+        res.status(401).json({
+            message: "Sin autorizacion",
+        });
     }
 };
 
