@@ -57,6 +57,8 @@ router.post('/teacher/lessons/created-by-code', lessonsController.getTeacherCrea
 router.post('/lessons/public-by-code', lessonsController.getPublicLessonsByCode)
 router.post('/teacher/lessons/private',validateScheme(lessonSchemes.lessonPaginationScheme), lessonsController.getLessonsPrivateByTeacherPages)
 
+router.post('/student/lessons/next-assignment', lessonsController.getLessonsNextAssignment)
+router.post('/student/lessons/count-pending',validateScheme(lessonSchemes.pendingLessonsScheme), lessonsController.getLessonsCountPendingCompletedStudent)
 
 
 // groups-routes
