@@ -60,6 +60,8 @@ router.post('/teacher/lessons/private',validateScheme(lessonSchemes.lessonPagina
 router.post('/student/lessons/next-assignment', lessonsController.getLessonsNextAssignment)
 router.post('/student/lessons/count-pending',validateScheme(lessonSchemes.pendingLessonsScheme), lessonsController.getLessonsCountPendingCompletedStudent)
 
+router.post('/student/ppm-and-accuracy', lessonsController.getPPMAndAccuracy)
+
 
 // groups-routes
 router.get('/teacher/groups', groupsController.getTeacherGroups)
