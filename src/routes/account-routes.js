@@ -1,6 +1,7 @@
 const { Router }  = require('express')
 const router = Router()
 const schemes = require('../schemes/register-scheme')
+const lessonSchemes = require('../schemes/lessons-scheme')
 const validateScheme = require('../middleware/scheme-validation')
 const accountController = require('../controllers/account-controller');
 const lessonsController = require('../controllers/lessons-controller')
@@ -41,8 +42,17 @@ router.post('/teacher/lesson/create/assign/bulk', lessonsController.createAssign
 router.get('/lessons/levels', lessonsController.getLessonLevels)//New
 router.get('/lessons/lexemes', lessonsController.getLexemes)//New
 router.get('/lessons/public/total', lessonsController.getLessonsPublicCount)//New
+router.get('/teacher/lessons/private/total', lessonsController.getLessonsTeacherPrivateCount)
+router.get('/student/lessons/assigned/total', lessonsController.getLessonsStudentAssignedCount)
 router.post('/lessons/public', lessonsController.getLessonsPublicPerPage)//New
-
+router.post('/student/lessons/assigned', lessonsController.getLessonsStudentAssignedPages)
+router.post('/lessons/default-by-code', lessonsController.getLessonsDefaultbyCode)
+router.get('/lessons/default/total', lessonsController.getLessonsDefaultCount)
+router.post('/student/lessons/assigned-by-code', lessonsController.getLessonsStudentAssignedByCode)
+router.post('/lessons/default',validateScheme(lessonSchemes.lessonPaginationScheme), lessonsController.getLessonsDefaultPages)
+router.post('/teacher/lessons/created-by-code', lessonsController.getTeacherCreatedLessonsByCode)
+router.post('/lessons/public-by-code', lessonsController.getPublicLessonsByCode)
+router.post('/teacher/lessons/private',validateScheme(lessonSchemes.lessonPaginationScheme), lessonsController.getLessonsPrivateByTeacherPages)
 // groups-routes
 router.get('/teacher/groups', groupsController.getTeacherGroups)
 router.get('/teacher/groups/total', groupsController.getGroupTeacherCount)//New
@@ -54,4 +64,5 @@ router.post('/teacher/groups/create', groupsController.createGroup)
 router.get('/teacher/groups/info', groupsController.getGroupInfo)
 router.get('/student/groups/', groupsController.getStudentGroups)
 router.post('/student/groups/join', groupsController.joinGroup)
+router.get('/teacher/recent-activity', groupsController.getRecentActivity)
 module.exports = router 
