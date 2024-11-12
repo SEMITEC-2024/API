@@ -247,9 +247,9 @@ const login = async (req, res) => {
 
 // get the profile information of the user
 const getProfileInfo = async (req, res) => {
-  const sql = "SELECT * FROM get_user($1)";
+  const sql = 'SELECT * FROM "Typing-Game-DB".get_student($1)';
   try {
-    const result = await db.pool.query(sql, [req.user_id]);
+    const result = await db.pool.query(sql, [req.teacher_id]);
     res.json(result.rows[0]);
   } catch (error) {
     console.log(error);
@@ -261,10 +261,9 @@ const getProfileInfo = async (req, res) => {
 };
 
 const getProfileInfoTeacher = async (req, res) => {
-  console.log(req.query.user_id, "profile");
   try {
     const sql = 'SELECT * FROM "Typing-Game-DB".get_user($1)';
-    const result = await db.pool.query(sql, [req.query.user_id]);
+    const result = await db.pool.query(sql, [req.teacher_id]);
     res.json(result.rows[0]);
   } catch (error) {
     console.log(error);
@@ -274,6 +273,86 @@ const getProfileInfoTeacher = async (req, res) => {
     });
   }
 };
+
+const updateProfileInfoTeacher = async (req,res) => {
+  try{
+    const {
+      institution_id,
+      district_id,
+      email,
+      name,
+      other_signs,
+      password
+    } = req.body;
+
+    const values = [
+      req.teacher_id,
+      institution_id,
+      district_id,
+      email,
+      name,
+      other_signs
+    ];
+
+    let sql;
+    if(password){
+      const salt = bcrypt.genSaltSync(10);
+      const hash = bcrypt.hashSync(password, salt);
+      values.push(hash);
+      sql = 'SELECT * from "Typing-Game-DB".update_teacher($1, $2, $3, $4, $5, $6, $7)';
+    }
+    else{ sql = 'SELECT * from "Typing-Game-DB".update_teacher($1, $2, $3, $4, $5, $6)'; }
+    const result = await db.pool.query(sql, values);
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ message: "Error al actualizar el usuario", error: error });
+  }
+}
+
+const updateProfileInfoStudent = async (req,res) => {
+  try{
+    const {
+      institution_id,
+      district_id,
+      email,
+      name,
+      other_signs,
+      date_birth,
+      education_level_id,
+      password
+    } = req.body;
+
+    const values = [
+      req.teacher_id,
+      institution_id,
+      district_id,
+      email,
+      name,
+      other_signs,
+      date_birth,
+      education_level_id,
+    ];
+
+    let sql;
+    if(password){
+      const salt = bcrypt.genSaltSync(10);
+      const hash = bcrypt.hashSync(password, salt);
+      values.push(hash);
+      sql = 'SELECT * from "Typing-Game-DB".update_student($1, $2, $3, $4, $5, $6, $7, $8, $9)';
+    }
+    else{ sql = 'SELECT * from "Typing-Game-DB".update_student($1, $2, $3, $4, $5, $6, $7, $8)'; }
+    const result = await db.pool.query(sql, values);
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ message: "Error al actualizar el usuario", error: error });
+  }
+}
 
 const getUsername = (req, res) => {
   res.json({ username: req.username });
@@ -288,9 +367,11 @@ module.exports = {
   registerTeacher,
   registerStudent,
   login,
-  getProfileInfo,
   getUsername,
   getProfileInfoTeacher,
+  getProfileInfo,
+  updateProfileInfoTeacher,
+  updateProfileInfoStudent,
   getDistricts,
   getEducationLevels,
 };

@@ -21,10 +21,12 @@ router.post('/register-teacher', validateScheme(schemes.registerTeacherScheme), 
 router.post('/register-student', validateScheme(schemes.registerStudentScheme),accountController.registerStudent)
 
 router.post('/login', accountController.login)
-router.get('/teacher/profile', accountController.getProfileInfo)
+router.get('/teacher/profile', accountController.getProfileInfoTeacher)
 router.get('/student/profile', accountController.getProfileInfo)
 router.get('/teacher/username', accountController.getUsername)
 router.get('/student/username', accountController.getUsername)
+router.post('/teacher/profile/update', accountController.updateProfileInfoTeacher);//New
+router.post('/student/profile/update', accountController.updateProfileInfoStudent);//New
 
 
 // lessons routes
@@ -36,15 +38,16 @@ router.get('/teacher/groups/info/student-info', lessonsController.getAverageMetr
 router.get('/teacher/groups/info/student-profile', accountController.getProfileInfoTeacher)
 router.get('/student/lessons/accuracy-history', lessonsController.getAccuracyHistory)
 router.get('/student/lessons/next-lesson', lessonsController.getNextLesson)
-router.post('/teacher/lessons/create', lessonsController.createLesson)//New
-router.post('/teacher/lessons/create/assign', lessonsController.assignLesson)//New)
-router.post('/teacher/lesson/create/assign/bulk', lessonsController.createAssignLesson)//New
-router.get('/lessons/levels', lessonsController.getLessonLevels)//New
-router.get('/lessons/lexemes', lessonsController.getLexemes)//New
-router.get('/lessons/public/total', lessonsController.getLessonsPublicCount)//New
+
+router.post('/teacher/lessons/create', lessonsController.createLesson)
+router.post('/teacher/lessons/create/assign', lessonsController.assignLesson)
+router.post('/teacher/lesson/create/assign/bulk', lessonsController.createAssignLesson)
+router.get('/lessons/levels', lessonsController.getLessonLevels)
+router.get('/lessons/lexemes', lessonsController.getLexemes)
+router.get('/lessons/public/total', lessonsController.getLessonsPublicCount)
 router.get('/teacher/lessons/private/total', lessonsController.getLessonsTeacherPrivateCount)
 router.get('/student/lessons/assigned/total', lessonsController.getLessonsStudentAssignedCount)
-router.post('/lessons/public', lessonsController.getLessonsPublicPerPage)//New
+router.post('/lessons/public', lessonsController.getLessonsPublicPerPage)
 router.post('/student/lessons/assigned', lessonsController.getLessonsStudentAssignedPages)
 router.post('/lessons/default-by-code', lessonsController.getLessonsDefaultbyCode)
 router.get('/lessons/default/total', lessonsController.getLessonsDefaultCount)
@@ -53,13 +56,16 @@ router.post('/lessons/default',validateScheme(lessonSchemes.lessonPaginationSche
 router.post('/teacher/lessons/created-by-code', lessonsController.getTeacherCreatedLessonsByCode)
 router.post('/lessons/public-by-code', lessonsController.getPublicLessonsByCode)
 router.post('/teacher/lessons/private',validateScheme(lessonSchemes.lessonPaginationScheme), lessonsController.getLessonsPrivateByTeacherPages)
+
+
+
 // groups-routes
 router.get('/teacher/groups', groupsController.getTeacherGroups)
-router.get('/teacher/groups/total', groupsController.getGroupTeacherCount)//New
-router.post('/teacher/groups', groupsController.getTeacherGroupsPerPage)//New
+router.get('/teacher/groups/total', groupsController.getGroupTeacherCount)
+router.post('/teacher/groups', groupsController.getTeacherGroupsPerPage)
 //router.get('/student/groups/members', groupsController.getGroupMembers) PENDING
-router.get('/teacher/groups/members/total', groupsController.getGroupStudentsCount)//New
-router.post('/teacher/groups/members', groupsController.getGroupStudents)//New
+router.get('/teacher/groups/members/total', groupsController.getGroupStudentsCount)
+router.post('/teacher/groups/members', groupsController.getGroupStudents)
 router.post('/teacher/groups/create', groupsController.createGroup)
 router.get('/teacher/groups/info', groupsController.getGroupInfo)
 router.get('/student/groups/', groupsController.getStudentGroups)
