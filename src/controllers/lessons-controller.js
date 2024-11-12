@@ -421,6 +421,37 @@ const getLessonsStudentAssignedByCode = async (req, res) => {
     }
 }
 
+const getLessonsNextAssignment = async (req, res) => {
+    try {
+        const result = await db.pool.query(
+        'SELECT * FROM "Typing-Game-DB".get_lessons_next_assignment($1)',
+        [req.teacher_id]
+        );
+        res.json(result.rows);
+    } catch (error) {
+        console.log(error);
+        res
+        .status(500)
+        .json({ message: "Error al obtener la lección", error: error });
+    }
+    
+}
+
+const getLessonsCountPendingCompletedStudent = async (req, res) => {
+    try {
+        const result = await db.pool.query(
+        'SELECT * FROM "Typing-Game-DB".get_lessons_count_pending_completed_student($1, $2)',
+        [req.teacher_id, req.body.teacher_id]
+        );
+        res.json(result.rows);
+    } catch (error) {
+        console.log(error);
+        res
+        .status(500)
+        .json({ message: "Error al obtener la lección", error: error });
+    }
+}
+
 module.exports = {
   getLessons,
   getLesson,
@@ -445,5 +476,7 @@ module.exports = {
   getLessonsDefaultPages,
   getLessonsStudentAssignedCount,
   getLessonsStudentAssignedPages,
-  getLessonsStudentAssignedByCode
+  getLessonsStudentAssignedByCode,
+  getLessonsNextAssignment,
+  getLessonsCountPendingCompletedStudent
 };
