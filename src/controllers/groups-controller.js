@@ -47,6 +47,43 @@ const getTeacherGroupsPerPage = async (req, res) => {
   }
 };
 
+//Number of groups that a student has
+const getGroupStudentCount = async (req, res) => {
+  try {
+    const result = await db.pool.query(
+      'SELECT * from "Typing-Game-DB".get_group_student_count($1)',
+      [req.teacher_id]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        message: "Error al obtener la cantidad de grupos",
+        error: error,
+      });
+  }
+};
+
+//Groups by student with pagination
+const getStudentGroupsPerPage = async (req, res) => {
+  const { var_page_number, var_page_size } = req.body;
+  try {
+    const result = await db.pool.query(
+      'SELECT * from "Typing-Game-DB".get_group_student_per_page($1, $2, $3)',
+      [req.teacher_id, var_page_number, var_page_size]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        message: "Error al obtener la información de los grupos del profesor",
+        error: error,
+      });
+  }
+};
+
 //Number of students that a group has
 const getGroupStudentsCount = async (req, res) => {
   try {
@@ -65,6 +102,7 @@ const getGroupStudentsCount = async (req, res) => {
   }
 };
 
+
 //Group's students with pagination
 const getGroupStudents = async (req, res) => {
   const { var_group_id, var_page_number, var_page_size } = req.body;
@@ -82,15 +120,6 @@ const getGroupStudents = async (req, res) => {
         error: error,
       });
   }
-};
-
-const getStudentGroups = (req, res) => {
-  const sql = "CALL get_group_info_by_student(?)";
-  db.query(sql, [req.teacher_id], (error, result) => {
-    if (error) throw error;
-    console.log(result[0]);
-    res.json(result[0]);
-  });
 };
 
 // crear grupo
@@ -115,21 +144,6 @@ const joinGroup = (req, res) => {
     db.query(sql, [req.body.group_code, req.teacher_id], (error, result) => {
       if (error) console.log(error);
       res.json({ message: "hoal" });
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-const getGroupInfo = (req, res) => {
-  try {
-    const sql = "CALL get_group_info(?)";
-    db.query(sql, [req.query.group_id], (error, result) => {
-      if (error) {
-        res.status(300).json({ message: error });
-      }
-      console.log(result[0]);
-      res.json(result[0][0]);
     });
   } catch (error) {
     console.log(error);
@@ -171,11 +185,11 @@ module.exports = {
   getTeacherGroups,
   getGroupStudents,
   getGroupStudentsCount,
-  getStudentGroups,
   createGroup,
   joinGroup,
-  getGroupInfo,
   getGroupTeacherCount,
   getTeacherGroupsPerPage,
+  getGroupStudentCount,
+  getStudentGroupsPerPage,
   getRecentActivity,
 };
