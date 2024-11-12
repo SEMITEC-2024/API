@@ -407,51 +407,64 @@ const getPublicLessonsByCode = async (req, res) => {
 };
 
 const getLessonsStudentAssignedByCode = async (req, res) => {
-    try {
-      const result = await db.pool.query(
-        'SELECT * FROM "Typing-Game-DB".get_lessons_student_assigned_by_code($1, $2)',
-        [req.body.lesson_code, req.teacher_id]
-      );
-      res.json(result.rows);
-    } catch (error) {
-      console.log(error);
-      res
-        .status(500)
-        .json({ message: "Error al obtener la lección", error: error });
-    }
-}
+  try {
+    const result = await db.pool.query(
+      'SELECT * FROM "Typing-Game-DB".get_lessons_student_assigned_by_code($1, $2)',
+      [req.body.lesson_code, req.teacher_id]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ message: "Error al obtener la lección", error: error });
+  }
+};
 
 const getLessonsNextAssignment = async (req, res) => {
-    try {
-        const result = await db.pool.query(
-        'SELECT * FROM "Typing-Game-DB".get_lessons_next_assignment($1)',
-        [req.teacher_id]
-        );
-        res.json(result.rows);
-    } catch (error) {
-        console.log(error);
-        res
-        .status(500)
-        .json({ message: "Error al obtener la lección", error: error });
-    }
-    
-}
+  try {
+    const result = await db.pool.query(
+      'SELECT * FROM "Typing-Game-DB".get_lessons_next_assignment($1)',
+      [req.teacher_id]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ message: "Error al obtener la lección", error: error });
+  }
+};
 
 const getLessonsCountPendingCompletedStudent = async (req, res) => {
-    try {
-        const result = await db.pool.query(
-        'SELECT * FROM "Typing-Game-DB".get_lessons_count_pending_completed_student($1, $2)',
-        [req.teacher_id, req.body.teacher_id]
-        );
-        res.json(result.rows);
-    } catch (error) {
-        console.log(error);
-        res
-        .status(500)
-        .json({ message: "Error al obtener la lección", error: error });
-    }
-}
+  try {
+    const result = await db.pool.query(
+      'SELECT * FROM "Typing-Game-DB".get_lessons_count_pending_completed_student($1, $2)',
+      [req.teacher_id, req.body.teacher_id]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ message: "Error al obtener la lección", error: error });
+  }
+};
 
+const getPPMAndAccuracy = async (req, res) => {
+  try {
+    const result = await db.pool.query(
+      'SELECT * FROM "Typing-Game-DB".get_ppm_and_precision($1)',
+      [req.teacher_id]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ message: "Error al obtener la lección", error: error });
+  }
+};
 module.exports = {
   getLessons,
   getLesson,
@@ -478,5 +491,6 @@ module.exports = {
   getLessonsStudentAssignedPages,
   getLessonsStudentAssignedByCode,
   getLessonsNextAssignment,
-  getLessonsCountPendingCompletedStudent
+  getLessonsCountPendingCompletedStudent,
+  getPPMAndAccuracy,
 };
