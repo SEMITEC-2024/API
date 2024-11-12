@@ -63,12 +63,24 @@ router.post('/teacher/lessons/private',validateScheme(lessonSchemes.lessonPagina
 router.get('/teacher/groups', groupsController.getTeacherGroups)
 router.get('/teacher/groups/total', groupsController.getGroupTeacherCount)
 router.post('/teacher/groups', groupsController.getTeacherGroupsPerPage)
-//router.get('/student/groups/members', groupsController.getGroupMembers) PENDING
-router.get('/teacher/groups/members/total', groupsController.getGroupStudentsCount)
-router.post('/teacher/groups/members', groupsController.getGroupStudents)
+router.get('/student/groups/total', groupsController.getGroupStudentCount)
+router.post('/student/groups', groupsController.getStudentGroupsPerPage)
+router.get('/:role/groups/members/total', (req, res) => { 
+    const { role } = req.params; 
+    if (role === 'teacher' || role === 'student') { 
+        groupsController.getGroupStudentsCount(req, res); 
+    } else { 
+        res.status(400).json({ message: 'Invalid role' }); 
+    } 
+});
+router.post('/:role/groups/members', (req, res) => { 
+    const { role } = req.params; 
+    if (role === 'teacher' || role === 'student') { 
+        groupsController.getGroupStudents(req, res); 
+    } else { res.status(400).json({ message: 'Invalid role' }); 
+    } 
+});
 router.post('/teacher/groups/create', groupsController.createGroup)
-router.get('/teacher/groups/info', groupsController.getGroupInfo)
-router.get('/student/groups/', groupsController.getStudentGroups)
 router.post('/student/groups/join', groupsController.joinGroup)
 router.get('/teacher/recent-activity', groupsController.getRecentActivity)
 module.exports = router 
