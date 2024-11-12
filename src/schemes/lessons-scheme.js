@@ -9,4 +9,17 @@ const pendingLessonsScheme = joi.object({
   teacher_id: joi.number().required(),
 });
 
-module.exports = { lessonPaginationScheme, pendingLessonsScheme };
+const getLessonScheme = joi.object({
+  lesson_id: joi.number().required(),
+});
+
+const getLessonsByCodeScheme = joi.object({
+  lesson_code: joi.string().required(),
+});
+
+module.exports = {
+  lessonPaginationScheme,
+  pendingLessonsScheme,
+  getLessonScheme,
+  getLessonsByCodeScheme,
+};
