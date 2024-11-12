@@ -1,21 +1,16 @@
 const db = require("../database/connection");
 
-// get the lessons list
-const getLessons = (req, res) => {
-  const sql = "CALL get_lessons()";
-  db.query(sql, (error, result) => {
-    if (error) throw error;
-    res.json(result[0]);
-  });
-};
-
 // get lesson by id
-const getLesson = (req, res) => {
-  const sql = "CALL get_lesson(?)";
-  db.query(sql, [req.query.lesson_id], (error, result) => {
-    if (error) throw error;
-    res.json(result[0][0]);
-  });
+const getLesson = async (req, res) => {
+  const sql = 'SELECT * FROM "Typing-Game-DB".get_lesson($1)';
+  try {
+    const result = await db.pool.query(sql, [req.query.lesson_id]);
+    res.json(result.rows);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ mesage: "Error al obtener la lección", error: error });
+  }
 };
 
 const saveLessonMetrics = (req, res) => {
@@ -94,6 +89,7 @@ const createLesson = async (req, res) => {
       .json({ message: "Error al crear la lección", error: error });
   }
 };
+
 const assignLesson = async (req, res) => {
   try {
     const { lesson_id, students_ids } = req.body;
@@ -186,14 +182,16 @@ const getAccuracyHistory = (req, res) => {
   });
 };
 
-const getNextLesson = (req, res) => {
-  const sql = "CALL get_last_lesson(?)";
-  db.query(sql, [req.teacher_id], (error, result) => {
-    if (error) {
-      res.status(300).json({ message: error });
-    }
-    res.json(result[0][0]);
-  });
+const getNextLesson = async (req, res) => {
+  try {
+    const sql = 'SELECT * FROM "Typing-Game-DB".get_last_lesson($1)';
+    const result = await db.pool.query(sql, [req.teacher_id]);
+    res.json(result.rows);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error al obtener la lección", error: error });
+  }
 };
 
 //Lexemas opt
@@ -466,7 +464,6 @@ const getPPMAndAccuracy = async (req, res) => {
   }
 };
 module.exports = {
-  getLessons,
   getLesson,
   saveLessonMetrics,
   createLesson,
