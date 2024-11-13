@@ -493,6 +493,21 @@ const getLessonsCountPendingCompletedStudent = async (req, res) => {
   }
 };
 
+const getPendingLessonCountFromTeacher = async (req, res) => {
+    try {
+    const result = await db.pool.query(
+      'SELECT * FROM "Typing-Game-DB".get_lessons_count_pending_completed_student($1, $2)',
+      [req.body.student_id, req.teacher_id]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ message: "Error al obtener la lección", error: error });
+  }
+}
+
 const getLessonMetricsStudent = async (req,res) => {
   try{
     //If the ID comes in the URL, it means a teacher made the request.
@@ -531,6 +546,21 @@ const getPPMAndAccuracy = async (req, res) => {
   }
 };
 
+const getPPMAndAccuracyFromTeacher = async (req, res) => {
+   try {
+    const result = await db.pool.query(
+      'SELECT * FROM "Typing-Game-DB".get_ppm_and_precision($1)',
+      [req.body.student_id]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ message: "Error al obtener la lección", error: error });
+  } 
+}
+
 module.exports = {
   getLesson,
   saveLessonMetrics,
@@ -561,4 +591,6 @@ module.exports = {
   getLessonsNextAssignment,
   getLessonsCountPendingCompletedStudent,
   getPPMAndAccuracy,
+  getPendingLessonCountFromTeacher,
+  getPPMAndAccuracyFromTeacher
 };
