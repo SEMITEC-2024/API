@@ -6,7 +6,7 @@ const lessonPaginationScheme = joi.object({
 });
 
 const pendingLessonsScheme = joi.object({
-  teacher_id: joi.number().required(),
+  teacher_id: joi.number().optional(),
 });
 
 const getLessonScheme = joi.object({
