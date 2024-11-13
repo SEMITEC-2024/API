@@ -114,7 +114,7 @@ router.post(
 router.get("/student/lessons/stats", lessonController.getAverageMetrics);
 
 //get average metrics for a student from a teacher account
-router.get(
+router.post(
   "/teacher/lessons/stats",
   validateScheme.body(lessonSchemes.pendingLessonsScheme),
   lessonController.getAverageMetricsFromTeacher
