@@ -33,7 +33,8 @@ router.post('/student/profile/update', accountController.updateProfileInfoStuden
 router.get('/lessons', lessonsController.getLessons)
 router.get('/lesson', lessonsController.getLesson)
 router.post('/student/lesson/results', lessonsController.saveLessonMetrics)
-router.get('/student/lessons/stats', lessonsController.getAverageMetrics)
+router.post('/student/lessons/studentstats', lessonsController.getLessonMetricsStudent)
+router.post('/teacher/lessons/studentstats', lessonsController.getLessonMetricsStudent)
 router.get('/teacher/groups/info/student-info', lessonsController.getAverageMetricsTeacher)
 router.get('/teacher/groups/info/student-profile', accountController.getProfileInfoTeacher)
 router.get('/student/lessons/accuracy-history', lessonsController.getAccuracyHistory)
@@ -65,21 +66,14 @@ router.get('/teacher/groups/total', groupsController.getGroupTeacherCount)
 router.post('/teacher/groups', groupsController.getTeacherGroupsPerPage)
 router.get('/student/groups/total', groupsController.getGroupStudentCount)
 router.post('/student/groups', groupsController.getStudentGroupsPerPage)
-router.get('/:role/groups/members/total', (req, res) => { 
-    const { role } = req.params; 
-    if (role === 'teacher' || role === 'student') { 
-        groupsController.getGroupStudentsCount(req, res); 
-    } else { 
-        res.status(400).json({ message: 'Invalid role' }); 
-    } 
-});
-router.post('/:role/groups/members', (req, res) => { 
-    const { role } = req.params; 
-    if (role === 'teacher' || role === 'student') { 
-        groupsController.getGroupStudents(req, res); 
-    } else { res.status(400).json({ message: 'Invalid role' }); 
-    } 
-});
+router.get('/student/groups/members/total', groupsController.getGroupStudentsCount)
+router.get('/teacher/groups/members/total', groupsController.getGroupStudentsCount)
+router.post('/student/groups/members', groupsController.getGroupStudents)
+router.post('/teacher/groups/members', groupsController.getGroupStudents)
+router.get('/student/lessons/history/total',lessonsController.getStudentLessonsHistoryCount)
+router.get('/teacher/lessons/history/total',lessonsController.getStudentLessonsHistoryCount)
+router.post('/student/lessons/history', lessonsController.getStudentLessonsHistoryPerPage)
+router.post('/teacher/lessons/history', lessonsController.getStudentLessonsHistoryPerPage)
 router.post('/teacher/groups/create', groupsController.createGroup)
 router.post('/student/groups/join', groupsController.joinGroup)
 router.get('/teacher/recent-activity', groupsController.getRecentActivity)
