@@ -5,7 +5,7 @@ const getLesson = async (req, res) => {
   const sql = 'SELECT * FROM "Typing-Game-DB".get_lesson($1)';
   try {
     const result = await db.pool.query(sql, [req.query.lesson_id]);
-    res.json(result.rows);
+    res.json(result.rows[0]);
   } catch (error) {
     res
       .status(500)
@@ -13,14 +13,13 @@ const getLesson = async (req, res) => {
   }
 };
 
-const saveLessonMetrics = (req, res) => {
-  console.log(req.body);
-  const sql = "CALL insert_student_metrics(?, ?, ?, ?, ?, ?, ?)";
+const saveLessonMetrics = async (req, res) => {
+  const sql =
+    'SELECT * FROM "Typing-Game-DB".insert_student_metrics($1, $2, $3, $4, $5, $6, $7)';
   const { lesson_id, time_taken, mistakes, accuracy_rate, ppm, is_complete } =
     req.body;
-  db.query(
-    sql,
-    [
+  try {
+    const result = await db.pool.query(sql, [
       lesson_id,
       req.teacher_id,
       time_taken,
@@ -28,15 +27,13 @@ const saveLessonMetrics = (req, res) => {
       accuracy_rate,
       ppm,
       is_complete,
-    ],
-    (error, result) => {
-      if (error) {
-        res.status(300).json({ message: "something went wrong" });
-        console.log(error);
-      }
-      res.json({ message: "message" });
-    }
-  );
+    ]);
+    res.json(result.rows);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error al guardar las métricas", error: error });
+  }
 };
 
 const getLessonLevels = async (req, res) => {
