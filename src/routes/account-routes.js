@@ -1,6 +1,7 @@
 const { Router }  = require('express')
 const router = Router()
 const schemes = require('../schemes/register-scheme')
+const accountSchemes = require('../schemes/account-scheme')
 const validateScheme = require('../middleware/scheme-validation')
 const accountController = require('../controllers/account-controller');
 const groupsController = require('../controllers/groups-controller')
@@ -26,6 +27,8 @@ router.get('/student/username', accountController.getUsername)
 router.post('/teacher/profile/update', accountController.updateProfileInfoTeacher);//New
 router.post('/student/profile/update', accountController.updateProfileInfoStudent);//New
 
+router.post('/teacher/student-info',
+    validateScheme.body(accountSchemes.studentId), accountController.getStudentProfileFromTeacher)
 
 router.get('/teacher/groups/info/student-profile', accountController.getProfileInfoTeacher)
 

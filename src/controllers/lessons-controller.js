@@ -15,9 +15,12 @@ const getLesson = async (req, res) => {
 
 const saveLessonMetrics = async (req, res) => {
   const sql =
-    'SELECT * FROM "Typing-Game-DB".insert_student_metrics($1, $2, $3, $4, $5, $6, $7)';
-  const { lesson_id, time_taken, mistakes, accuracy_rate, ppm, is_complete } =
-    req.body;
+    'SELECT * FROM "Typing-Game-DB".insert_student_metrics($1, $2, $3, $4, $5, $6, $7, $8)';
+  const { lesson_id, time_taken, mistakes, accuracy_rate, ppm, is_completed } =
+  req.body;
+    console.log(req.body);
+    const date = new Date().toISOString().split("T")[0];
+    console.log(date);
   try {
     const result = await db.pool.query(sql, [
       lesson_id,
@@ -26,10 +29,12 @@ const saveLessonMetrics = async (req, res) => {
       mistakes,
       accuracy_rate,
       ppm,
-      is_complete,
+      is_completed,
+     '2024-11-13',
     ]);
     res.json(result.rows);
   } catch (error) {
+    console.log(error);
     res
       .status(500)
       .json({ message: "Error al guardar las métricas", error: error });
