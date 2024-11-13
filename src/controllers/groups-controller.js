@@ -122,6 +122,55 @@ const getGroupStudents = async (req, res) => {
   }
 };
 
+//Number of students that the filter return
+const getFilteredGroupStudentsCount = async (req, res) => {
+  const { var_name ,var_institution_id, var_group_id } = req.body;
+  try {
+      const result = await db.pool.query(
+          `SELECT * FROM "Typing-Game-DB".get_students_by_name_and_institution_count($1, $2, $3)`,
+          [var_name ,var_institution_id, var_group_id]
+      );
+      res.json(result.rows);
+  } catch (error) {
+      res.status(500).json({
+          message: "Error al obtener la cantidad de estudiantes filtrados por institución y nombre",
+          error: error.message
+      });
+  }
+};
+//a list of students with pagination
+const getFilteredGroupStudents = async (req, res) => {
+  const { var_name ,var_institution_id, var_group_id, var_page_number, var_page_size } = req.body;
+  try {
+      const result = await db.pool.query(
+          `SELECT * FROM "Typing-Game-DB".get_students_by_name_and_institution_per_page($1, $2, $3, $4, $5)`,
+          [var_name ,var_institution_id, var_group_id, var_page_number, var_page_size]
+      );
+      res.json(result.rows);
+  } catch (error) {
+      res.status(500).json({
+          message: "Error al obtener los estudiantes filtrados por institución y nombre",
+          error: error.message
+      });
+  }
+};
+// add a student to a group
+const addStudent = async (req, res) => {
+  const { var_group_id ,var_user_id} = req.body;
+  try {
+      const result = await db.pool.query(
+          `SELECT * FROM "Typing-Game-DB".insert_student_in_group($1, $2)`,
+          [var_group_id ,var_user_id]
+      );
+      res.json(result.rows);
+  } catch (error) {
+      res.status(500).json({
+          message: "Error al insertar el estudiante en el grupo",
+          error: error.message
+      });
+  }
+};
+
 // crear grupo
 const createGroup = (req, res) => {
   console.log(req.teacher_id, "creando grupo");
@@ -185,6 +234,9 @@ module.exports = {
   getTeacherGroups,
   getGroupStudents,
   getGroupStudentsCount,
+  getFilteredGroupStudentsCount,
+  getFilteredGroupStudents,
+  addStudent,
   createGroup,
   joinGroup,
   getGroupTeacherCount,
