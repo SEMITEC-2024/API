@@ -71,11 +71,17 @@ router.post(
 );
 
 // get student assigned lessons count for pagination
-router.get('/student/lessons/assigned/total', lessonController.getLessonsStudentAssignedCount)
+router.get(
+  "/student/lessons/assigned/total",
+  lessonController.getLessonsStudentAssignedCount
+);
 
 // get student assigned lessons with pagination
-router.post('/student/lessons/assigned',
-    validateScheme.body(lessonSchemes.lessonPaginationScheme), lessonController.getLessonsStudentAssignedPages)
+router.post(
+  "/student/lessons/assigned",
+  validateScheme.body(lessonSchemes.lessonPaginationScheme),
+  lessonController.getLessonsStudentAssignedPages
+);
 
 // get student asgined lessons, query by code
 router.post(
@@ -92,26 +98,39 @@ router.post(
 );
 
 // save lesson metrics
-router.post('/student/lesson/results', lessonController.saveLessonMetrics)
+router.post(
+  "/student/lesson/results",
+  validateScheme.body(lessonSchemes.saveMetrics),
+  lessonController.saveLessonMetrics
+);
 
 // get average metrics for a student
-router.get('/student/lessons/stats', lessonController.getAverageMetrics)
+router.get("/student/lessons/stats", lessonController.getAverageMetrics);
 
 //get average metrics for a student from a teacher account
-router.get('/teacher/groups/info/student-info', lessonController.getAverageMetricsTeacher)
+router.get(
+  "/teacher/groups/info/student-info",
+  lessonController.getAverageMetricsTeacher
+);
 // get accuracy history for a student
-router.get('/student/lessons/accuracy-history', lessonController.getAccuracyHistory)
+router.get(
+  "/student/lessons/accuracy-history",
+  lessonController.getAccuracyHistory
+);
 
 // create lesson
-router.post('/teacher/lessons/create', lessonController.createLesson)
+router.post("/teacher/lessons/create", lessonController.createLesson);
 // assign lesson
-router.post('/teacher/lessons/create/assign', lessonController.assignLesson)
+router.post("/teacher/lessons/create/assign", lessonController.assignLesson);
 // create and assign lesson
-router.post('/teacher/lesson/create/assign/bulk', lessonController.createAssignLesson)
+router.post(
+  "/teacher/lesson/create/assign/bulk",
+  lessonController.createAssignLesson
+);
 // get lesson levels
-router.get('/lessons/levels', lessonController.getLessonLevels)
+router.get("/lessons/levels", lessonController.getLessonLevels);
 // get lesson lexemes
-router.get('/lessons/lexemes', lessonController.getLexemes)
+router.get("/lessons/lexemes", lessonController.getLexemes);
 
 // get student ppm and accuracy
 router.post("/student/ppm-and-accuracy", lessonController.getPPMAndAccuracy);
