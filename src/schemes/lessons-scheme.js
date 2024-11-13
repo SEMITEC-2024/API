@@ -17,9 +17,19 @@ const getLessonsByCodeScheme = joi.object({
   lesson_code: joi.string().required(),
 });
 
+const saveMetrics = joi.object({
+    lesson_id: joi.number().required(),
+    time_taken: joi.number().required(),
+    mistakes: joi.number().required(),
+    accuracy_rate: joi.number().required(),
+    ppm: joi.number().required(),
+    is_completed: joi.boolean().required(),
+})
+
 module.exports = {
   lessonPaginationScheme,
   pendingLessonsScheme,
   getLessonScheme,
   getLessonsByCodeScheme,
+  saveMetrics
 };
