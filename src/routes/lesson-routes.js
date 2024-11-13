@@ -135,4 +135,33 @@ router.get("/lessons/lexemes", lessonController.getLexemes);
 // get student ppm and accuracy
 router.post("/student/ppm-and-accuracy", lessonController.getPPMAndAccuracy);
 
+router.post(
+  "/student/lessons/studentstats",
+  lessonController.getLessonMetricsStudent
+);
+router.post(
+  "/teacher/lessons/studentstats",
+  lessonController.getLessonMetricsStudent
+);
+
+router.get(
+  "/student/lessons/history/total",
+  lessonController.getStudentLessonsHistoryCount
+);
+
+router.get(
+  "/teacher/lessons/history/total",
+  lessonController.getStudentLessonsHistoryCount
+);
+
+router.post(
+  "/student/lessons/history",
+  lessonController.getStudentLessonsHistoryPerPage
+);
+
+router.post(
+  "/teacher/lessons/history",
+  lessonController.getStudentLessonsHistoryPerPage
+);
+
 module.exports = router;

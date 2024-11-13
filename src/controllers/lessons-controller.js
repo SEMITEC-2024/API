@@ -559,7 +559,7 @@ module.exports = {
   getLessonsStudentAssignedByCode,
   getStudentLessonsHistoryCount,
   getStudentLessonsHistoryPerPage,
-  getLessonMetricsStudent
+  getLessonMetricsStudent,
   getLessonsNextAssignment,
   getLessonsCountPendingCompletedStudent,
   getPPMAndAccuracy,
