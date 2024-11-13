@@ -93,8 +93,14 @@ router.post(
 // get student pending lessons count
 router.post(
   "/student/lessons/count-pending",
-  validateScheme.body(lessonSchemes.pendingLessonsScheme),
   lessonController.getLessonsCountPendingCompletedStudent
+);
+
+// get student pending lessons count from the teacher account
+router.post(
+  "/teacher/lessons/count-pending",
+  validateScheme.body(lessonSchemes.pendingLessonsScheme),
+  lessonController.getPendingLessonCountFromTeacher
 );
 
 // save lesson metrics
@@ -136,9 +142,16 @@ router.get("/lessons/lexemes", lessonController.getLexemes);
 router.post("/student/ppm-and-accuracy", lessonController.getPPMAndAccuracy);
 
 router.post(
+  "/teacher/ppm-and-accuracy",
+  validateScheme.body(lessonSchemes.pendingLessonsScheme),
+  lessonController.getPPMAndAccuracyFromTeacher
+);
+
+router.post(
   "/student/lessons/studentstats",
   lessonController.getLessonMetricsStudent
 );
+
 router.post(
   "/teacher/lessons/studentstats",
   lessonController.getLessonMetricsStudent
