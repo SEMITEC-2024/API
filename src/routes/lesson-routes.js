@@ -115,8 +115,9 @@ router.get("/student/lessons/stats", lessonController.getAverageMetrics);
 
 //get average metrics for a student from a teacher account
 router.get(
-  "/teacher/groups/info/student-info",
-  lessonController.getAverageMetricsTeacher
+  "/teacher/lessons/stats",
+  validateScheme.body(lessonSchemes.pendingLessonsScheme),
+  lessonController.getAverageMetricsFromTeacher
 );
 // get accuracy history for a student
 router.get(

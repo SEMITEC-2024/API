@@ -159,14 +159,16 @@ const getAverageMetrics = (req, res) => {
   });
 };
 
-const getAverageMetricsTeacher = (req, res) => {
-  const sql = "CALL get_average_metrics(?)";
-  db.query(sql, [req.query.user_id], (error, result) => {
-    if (error) {
-      res.status(300).json({ message: error });
-    }
-    res.json(result[0][0]);
-  });
+const getAverageMetricsFromTeacher = async (req, res) => {
+  const sql = 'SELECT * FROM "Typing-Game-DB".get_lesson_metrics_student($1)';
+  try {
+    const result = await db.pool.query(sql, [req.body.student_id]);
+    res.json(result.rows);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error al obtener las métricas", error: error });
+  }
 };
 
 const getAccuracyHistory = (req, res) => {
@@ -571,7 +573,7 @@ module.exports = {
   getAverageMetrics,
   getAccuracyHistory,
   getNextLesson,
-  getAverageMetricsTeacher,
+  getAverageMetricsFromTeacher,
   getLexemes,
   getLessonsPublicCount,
   getLessonsPublicPerPage,
