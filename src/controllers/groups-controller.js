@@ -230,6 +230,24 @@ const getRecentActivity = async (req, res) => {
   }
 };
 
+const deleteStudentFromGroup = async(req, res) => {
+  const { var_group_id, var_student_user_id } = req.body;
+  try{
+    const result = await db.pool.query(
+      'SELECT * from "Typing-Game-DB".delete_student_from_group($1, $2)',
+      [var_group_id, var_student_user_id]
+    );
+    res.json(result.rows);
+  } catch(error){
+    res
+      .status(500)
+      .json({
+        message: "Error al eliminar el estudiante",
+        error: error,
+      });
+  }
+}
+
 module.exports = {
   getTeacherGroups,
   getGroupStudents,
@@ -244,4 +262,5 @@ module.exports = {
   getGroupStudentCount,
   getStudentGroupsPerPage,
   getRecentActivity,
+  deleteStudentFromGroup
 };

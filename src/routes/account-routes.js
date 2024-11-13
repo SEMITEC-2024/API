@@ -27,7 +27,9 @@ router.post('/teacher/profile/update', accountController.updateProfileInfoTeache
 router.post('/student/profile/update', accountController.updateProfileInfoStudent);//New
 
 
-// lessons routes
+router.post('/student/lessons/studentstats', lessonsController.getLessonMetricsStudent)
+router.post('/teacher/lessons/studentstats', lessonsController.getLessonMetricsStudent)
+
 router.get('/teacher/groups/info/student-profile', accountController.getProfileInfoTeacher)
 
 
@@ -41,9 +43,20 @@ router.get('/student/groups/members/total', groupsController.getGroupStudentsCou
 router.get('/teacher/groups/members/total', groupsController.getGroupStudentsCount)
 router.post('/student/groups/members', groupsController.getGroupStudents)
 router.post('/teacher/groups/members', groupsController.getGroupStudents)
+
+router.get('/student/lessons/history/total',lessonsController.getStudentLessonsHistoryCount)
+router.get('/teacher/lessons/history/total',lessonsController.getStudentLessonsHistoryCount)
+router.post('/student/lessons/history', lessonsController.getStudentLessonsHistoryPerPage)
+router.post('/teacher/lessons/history', lessonsController.getStudentLessonsHistoryPerPage)
+
+router.get('/teacher/recent-activity', groupsController.getRecentActivity)
+router.post('/student/groups/members/remove', groupsController.deleteStudentFromGroup)
+router.post('/teacher/groups/members/remove', groupsController.deleteStudentFromGroup) 
+
 router.post('/teacher/groups/students/filter/total', groupsController.getFilteredGroupStudentsCount)
 router.post('/teacher/groups/students/filter', groupsController.getFilteredGroupStudents)
 router.post('/teacher/groups/students/add', groupsController.addStudent)
+
 router.post('/teacher/groups/create', groupsController.createGroup)
 router.post('/student/groups/join', groupsController.joinGroup)
 router.get('/teacher/recent-activity', groupsController.getRecentActivity)

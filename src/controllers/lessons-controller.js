@@ -275,6 +275,53 @@ const getLessonsStudentAssignedCount = async (req, res) => {
   }
 };
 
+const getStudentLessonsHistoryCount = async (req, res) => {
+  try {
+    //If the ID comes in the URL, it means a teacher made the request.
+    //If the URL has no parameters, it uses the ID from the Head, which belongs to an student
+    const userId = req.query.user_id || req.teacher_id; 
+    if (!userId) {
+      return res.status(400).json({
+        message: 'An ID is required' 
+      }); 
+    }
+    const result = await db.pool.query(
+      'SELECT * FROM "Typing-Game-DB".get_lesson_student_history_count($1)',
+      [userId]
+    );
+    res.json(result.rows[0]);
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al obtener el total de lecciones realizadas",
+      error: error,
+    });
+  }
+}
+///api/lessons-history-count?user_id=67890"
+
+const getStudentLessonsHistoryPerPage = async (req, res) => {
+  try {
+    //If the ID comes in the URL, it means a teacher made the request.
+    //If the URL has no parameters, it uses the ID from the Head, which belongs to an student
+    const userId = req.query.user_id || req.teacher_id; 
+    if (!userId) {
+      return res.status(400).json({
+        message: 'An ID is required' 
+      }); 
+    }
+    const { var_page_number, var_page_size } = req.body;
+    const result = await db.pool.query(
+      'SELECT * from "Typing-Game-DB".get_lesson_student_history_per_page($1, $2, $3)',
+      [userId, var_page_number, var_page_size]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error al obtener las lecciones", error: error });
+  }
+};
+
 const getLessonsStudentAssignedPages = async (req, res) => {
   try {
     const { var_page_number, var_page_size } = req.body;
@@ -449,6 +496,29 @@ const getLessonsCountPendingCompletedStudent = async (req, res) => {
   }
 };
 
+const getLessonMetricsStudent = async (req,res) => {
+  try{
+    //If the ID comes in the URL, it means a teacher made the request.
+    //If the URL has no parameters, it uses the ID from the Head, which belongs to an student
+    const userId = req.query.user_id || req.teacher_id; 
+    if (!userId) {
+      return res.status(400).json({
+        message: 'An ID is required' 
+      }); 
+    }
+    const { lesson_id } = req.body;
+    const result = await db.pool.query(
+      'SELECT * from "Typing-Game-DB".get_metrics_student_by_lesson($1, $2)',
+      [userId, lesson_id]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error al obtener las estadisticas", error: error });
+  }
+}
+
 const getPPMAndAccuracy = async (req, res) => {
   try {
     const result = await db.pool.query(
@@ -463,6 +533,7 @@ const getPPMAndAccuracy = async (req, res) => {
       .json({ message: "Error al obtener la lección", error: error });
   }
 };
+
 module.exports = {
   getLesson,
   saveLessonMetrics,
@@ -487,6 +558,9 @@ module.exports = {
   getLessonsStudentAssignedCount,
   getLessonsStudentAssignedPages,
   getLessonsStudentAssignedByCode,
+  getStudentLessonsHistoryCount,
+  getStudentLessonsHistoryPerPage,
+  getLessonMetricsStudent
   getLessonsNextAssignment,
   getLessonsCountPendingCompletedStudent,
   getPPMAndAccuracy,
