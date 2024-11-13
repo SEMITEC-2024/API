@@ -77,4 +77,6 @@ router.post('/teacher/lessons/history', lessonsController.getStudentLessonsHisto
 router.post('/teacher/groups/create', groupsController.createGroup)
 router.post('/student/groups/join', groupsController.joinGroup)
 router.get('/teacher/recent-activity', groupsController.getRecentActivity)
+router.post('/student/groups/members/remove', groupsController.deleteStudentFromGroup)
+router.post('/teacher/groups/members/remove', groupsController.deleteStudentFromGroup)
 module.exports = router 
