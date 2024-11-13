@@ -18,18 +18,18 @@ const getLessonsByCodeScheme = joi.object({
 });
 
 const saveMetrics = joi.object({
-    lesson_id: joi.number().required(),
-    time_taken: joi.number().required(),
-    mistakes: joi.number().required(),
-    accuracy_rate: joi.number().required(),
-    ppm: joi.number().required(),
-    is_completed: joi.boolean().required(),
-})
+  lesson_id: joi.number().required(),
+  time_taken: joi.number().required(),
+  mistakes: joi.number().required(),
+  accuracy_rate: joi.number().required(),
+  ppm: joi.number().required(),
+  is_completed: joi.boolean().truthy(1).falsy(0).required(),
+});
 
 module.exports = {
   lessonPaginationScheme,
   pendingLessonsScheme,
   getLessonScheme,
   getLessonsByCodeScheme,
-  saveMetrics
+  saveMetrics,
 };

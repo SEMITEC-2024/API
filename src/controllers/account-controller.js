@@ -260,6 +260,20 @@ const getProfileInfo = async (req, res) => {
   }
 };
 
+const getStudentProfileFromTeacher = async (req, res) => {
+    const sql = 'SELECT * FROM "Typing-Game-DB".get_student($1)';
+  try {
+    const result = await db.pool.query(sql, [req.body.student_id]);
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Error al obtener la información del usuario",
+      error: error,
+    });
+  }
+};
+
 const getProfileInfoTeacher = async (req, res) => {
   try {
     const sql = 'SELECT * FROM "Typing-Game-DB".get_user($1)';
@@ -374,4 +388,5 @@ module.exports = {
   updateProfileInfoStudent,
   getDistricts,
   getEducationLevels,
+  getStudentProfileFromTeacher
 };
