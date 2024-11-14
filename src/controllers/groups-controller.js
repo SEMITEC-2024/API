@@ -172,15 +172,13 @@ const addStudent = async (req, res) => {
 };
 
 // crear grupo
-const createGroup = (req, res) => {
-  console.log(req.teacher_id, "creando grupo");
+const createGroup = async (req, res) => {
+  const { var_group_name } = req.body;
   try {
-    const sql = "CALL insert_group_class(?, ?, ?)";
-    db.query(sql, [1, req.body.name, req.teacher_id], (error, result) => {
-      if (error) console.log(error);
-      console.log(result[0][0]);
-      res.json(result[0][0]);
-    });
+    const result = await db.pool.query('SELECT * FROM "Typing-Game-DB".insert_group_class($1, $2)',
+      [req.teacher_id, var_group_name]
+    );    
+    res.json(result.rows);
   } catch (error) {
     console.log(error);
   }
