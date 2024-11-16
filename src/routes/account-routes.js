@@ -34,7 +34,6 @@ router.get('/teacher/groups/info/student-profile', accountController.getProfileI
 
 
 // groups-routes
-router.get('/teacher/groups', groupsController.getTeacherGroups)
 router.get('/teacher/groups/total', groupsController.getGroupTeacherCount)
 router.post('/teacher/groups', groupsController.getTeacherGroupsPerPage)
 router.get('/student/groups/total', groupsController.getGroupStudentCount)
