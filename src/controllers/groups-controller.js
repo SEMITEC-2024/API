@@ -1,15 +1,5 @@
 const db = require("../database/connection");
 
-// get groups by teacher
-const getTeacherGroups = (req, res) => {
-  const sql = "CALL get_group_teacher_info(?)";
-  //req.teacher_id
-  db.query(sql, [req.teacher_id], (error, result) => {
-    if (error) throw error;
-    res.json(result[0]);
-  });
-};
-
 //Number of groups that a teacher has
 const getGroupTeacherCount = async (req, res) => {
   try {
@@ -30,12 +20,13 @@ const getGroupTeacherCount = async (req, res) => {
 
 //Groups by teacher with pagination
 const getTeacherGroupsPerPage = async (req, res) => {
-  const { var_page_number, var_page_size } = req.body;
+  const { var_group_by, var_group_dir, var_page_number, var_page_size } = req.body;
   try {
     const result = await db.pool.query(
-      'SELECT * from "Typing-Game-DB".get_group_teacher_per_page($1, $2, $3)',
-      [req.teacher_id, var_page_number, var_page_size]
+      'SELECT * from "Typing-Game-DB".get_group_teacher_per_page($1, $2, $3, $4, $5)',
+      [req.teacher_id, var_group_by, var_group_dir, var_page_number, var_page_size]
     );
+    console.log(result);
     res.json(result.rows);
   } catch (error) {
     res
@@ -67,18 +58,18 @@ const getGroupStudentCount = async (req, res) => {
 
 //Groups by student with pagination
 const getStudentGroupsPerPage = async (req, res) => {
-  const { var_page_number, var_page_size } = req.body;
+  const { var_group_by, var_group_dir, var_page_number, var_page_size } = req.body;
   try {
     const result = await db.pool.query(
-      'SELECT * from "Typing-Game-DB".get_group_student_per_page($1, $2, $3)',
-      [req.teacher_id, var_page_number, var_page_size]
+      'SELECT * from "Typing-Game-DB".get_group_student_per_page($1, $2, $3, $4, $5)',
+      [req.teacher_id, var_group_by, var_group_dir, var_page_number, var_page_size]
     );
     res.json(result.rows);
   } catch (error) {
     res
       .status(500)
       .json({
-        message: "Error al obtener la información de los grupos del profesor",
+        message: "Error al obtener la información de los grupos del estudiante",
         error: error,
       });
   }
@@ -247,7 +238,6 @@ const deleteStudentFromGroup = async(req, res) => {
 }
 
 module.exports = {
-  getTeacherGroups,
   getGroupStudents,
   getGroupStudentsCount,
   getFilteredGroupStudentsCount,
