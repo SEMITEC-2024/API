@@ -155,7 +155,7 @@ const createAssignLesson = async (req, res) => {
 };
 
 const getAverageMetrics = async (req, res) => {
- const sql = 'SELECT * FROM "Typing-Game-DB".get_lesson_metrics_student($1)';
+  const sql = 'SELECT * FROM "Typing-Game-DB".get_lesson_metrics_student($1)';
   try {
     const result = await db.pool.query(sql, [req.teacher_id]);
     res.json(result.rows);
