@@ -175,14 +175,12 @@ const createGroup = async (req, res) => {
   }
 };
 
-const joinGroup = (req, res) => {
-  console.log("Join Group");
+const joinGroup = async (req, res) => {
+  const { var_group_code } = req.body;
   try {
-    const sql = "CALL join_group_by_student_code(?, ?)";
-    db.query(sql, [req.body.group_code, req.teacher_id], (error, result) => {
-      if (error) console.log(error);
-      res.json({ message: "hoal" });
-    });
+    const result = await db.pool.query('SELECT * FROM "Typing-Game-DB".insert_student_in_group($1, $2)',
+      [var_group_code, req.teacher_id]);
+    res.json(result.rows)
   } catch (error) {
     console.log(error);
   }
@@ -219,23 +217,26 @@ const getRecentActivity = async (req, res) => {
   }
 };
 
-const deleteStudentFromGroup = async(req, res) => {
+const deleteStudentFromGroup = async (req, res) => {
   const { var_group_id, var_student_user_id } = req.body;
-  try{
+
+  // Use teacher_id (userId) from req if var_student_user_id is not provided
+  const studentUserId = var_student_user_id || req.teacher_id;
+
+  try {
     const result = await db.pool.query(
-      'SELECT * from "Typing-Game-DB".delete_student_from_group($1, $2)',
-      [var_group_id, var_student_user_id]
+      'SELECT * FROM "Typing-Game-DB".delete_student_from_group($1, $2)',
+      [var_group_id, studentUserId]
     );
     res.json(result.rows);
-  } catch(error){
-    res
-      .status(500)
-      .json({
-        message: "Error al eliminar el estudiante",
-        error: error,
-      });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error al eliminar el estudiante",
+      error: error,
+    });
   }
-}
+};
+
 
 module.exports = {
   getGroupStudents,
