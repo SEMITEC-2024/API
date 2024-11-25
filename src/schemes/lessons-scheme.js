@@ -3,6 +3,7 @@ const joi = require("joi");
 const lessonPaginationScheme = joi.object({
   var_page_number: joi.number().required(),
   var_page_size: joi.number().required(),
+  var_name: joi.string().allow('').required(),
 });
 
 const pendingLessonsScheme = joi.object({
@@ -26,10 +27,15 @@ const saveMetrics = joi.object({
   is_completed: joi.boolean().truthy(1).falsy(0).required(),
 });
 
+const lessonNameSearch = joi.object({
+  var_name: joi.string().allow('').required(),
+})
+
 module.exports = {
   lessonPaginationScheme,
   pendingLessonsScheme,
   getLessonScheme,
   getLessonsByCodeScheme,
   saveMetrics,
+  lessonNameSearch
 };

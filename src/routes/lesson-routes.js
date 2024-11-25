@@ -21,8 +21,9 @@ router.post(
 );
 
 // get teacher private lessons count for pagination
-router.get(
+router.post(
   "/teacher/lessons/private/total",
+  validateScheme.body(lessonSchemes.lessonNameSearch),
   lessonController.getLessonsTeacherPrivateCount
 );
 
@@ -41,7 +42,11 @@ router.post(
 );
 
 // get public lessons count for pagination
-router.get("/lessons/public/total", lessonController.getLessonsPublicCount);
+router.post(
+  "/lessons/public/total",
+  validateScheme.body(lessonSchemes.lessonNameSearch),
+  lessonController.getLessonsPublicCount
+);
 
 // get public lessons with pagination
 router.post("/lessons/public", lessonController.getLessonsPublicPerPage);
@@ -54,7 +59,11 @@ router.post(
 );
 
 // get default lessons count for pagination
-router.get("/lessons/default/total", lessonController.getLessonsDefaultCount);
+router.post(
+  "/lessons/default/total",
+  validateScheme.body(lessonSchemes.lessonNameSearch),
+  lessonController.getLessonsDefaultCount
+);
 
 // get default lessons with pagination
 router.post(
@@ -71,8 +80,9 @@ router.post(
 );
 
 // get student assigned lessons count for pagination
-router.get(
+router.post(
   "/student/lessons/assigned/total",
+  validateScheme.body(lessonSchemes.lessonNameSearch),
   lessonController.getLessonsStudentAssignedCount
 );
 
