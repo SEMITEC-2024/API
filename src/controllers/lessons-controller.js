@@ -220,7 +220,7 @@ const getLexemes = async (req, res) => {
 const getLessonsPublicCount = async (req, res) => {
   try {
     const result = await db.pool.query(
-      'SELECT * FROM "Typing-Game-DB".get_lessons_public_count()'
+      'SELECT * FROM "Typing-Game-DB".get_lessons_public_count($1)', [req.body.var_name]
     );
     const totalLessons = result.rows[0];
     res.json(totalLessons); // Devuelve el total como un número
@@ -234,10 +234,11 @@ const getLessonsPublicCount = async (req, res) => {
 };
 
 const getLessonsTeacherPrivateCount = async (req, res) => {
+  console.log(req.teacher_id, req.body.var_name);
   try {
     const result = await db.pool.query(
-      'SELECT * FROM "Typing-Game-DB".get_lessons_teacher_private_count($1)',
-      [req.teacher_id]
+      'SELECT * FROM "Typing-Game-DB".get_lessons_private_by_teacher_count($1, $2)',
+      [req.teacher_id, req.body.var_name]
     );
     const totalLessons = result.rows[0];
     res.json(totalLessons); // Devuelve el total como un número
@@ -253,7 +254,7 @@ const getLessonsTeacherPrivateCount = async (req, res) => {
 const getLessonsDefaultCount = async (req, res) => {
   try {
     const result = await db.pool.query(
-      'SELECT * FROM "Typing-Game-DB".get_lessons_default_count()'
+      'SELECT * FROM "Typing-Game-DB".get_lessons_default_count($1)', [req.body.var_name]
     );
     const totalLessons = result.rows[0];
     res.json(totalLessons); // Devuelve el total como un número
@@ -269,8 +270,8 @@ const getLessonsDefaultCount = async (req, res) => {
 const getLessonsStudentAssignedCount = async (req, res) => {
   try {
     const result = await db.pool.query(
-      'SELECT * FROM "Typing-Game-DB".get_lessons_assigned_student_count($1)',
-      [req.teacher_id]
+      'SELECT * FROM "Typing-Game-DB".get_lessons_assigned_student_count($1, $2)',
+      [req.teacher_id, req.body.var_name]
     );
     res.json(result.rows[0]);
   } catch (error) {
@@ -330,10 +331,10 @@ const getStudentLessonsHistoryPerPage = async (req, res) => {
 
 const getLessonsStudentAssignedPages = async (req, res) => {
   try {
-    const { var_page_number, var_page_size } = req.body;
+    const { var_page_number, var_page_size, var_name } = req.body;
     const result = await db.pool.query(
-      'SELECT * from "Typing-Game-DB".get_lessons_assigned_student_per_page($1, $2, $3)',
-      [req.teacher_id, var_page_number, var_page_size]
+      'SELECT * from "Typing-Game-DB".get_lessons_assigned_student_per_page($1, $2, $3, $4)',
+      [req.teacher_id, var_page_number, var_page_size, var_name]
     );
     res.json(result.rows);
   } catch (error) {
@@ -346,10 +347,10 @@ const getLessonsStudentAssignedPages = async (req, res) => {
 
 const getLessonsDefaultPages = async (req, res) => {
   try {
-    const { var_page_number, var_page_size } = req.body;
+    const { var_page_number, var_page_size, var_name } = req.body;
     result = await db.pool.query(
-      'SELECT * from "Typing-Game-DB".get_lessons_default_per_page($1, $2)',
-      [var_page_number, var_page_size]
+      'SELECT * from "Typing-Game-DB".get_lessons_default_per_page($1, $2, $3)',
+      [var_page_number, var_page_size, var_name]
     );
     res.json(result.rows);
   } catch (error) {
@@ -362,11 +363,11 @@ const getLessonsDefaultPages = async (req, res) => {
 
 const getLessonsPrivateByTeacherPages = async (req, res) => {
   try {
-    const { var_page_number, var_page_size } = req.body;
+    const { var_page_number, var_page_size, var_name } = req.body;
     console.log(req.teacher_id, var_page_number, var_page_size, "bodies`");
     const result = await db.pool.query(
-      'SELECT * from "Typing-Game-DB".get_lessons_private_by_teacher_pages($1, $2, $3)',
-      [req.teacher_id, var_page_number, var_page_size]
+      'SELECT * from "Typing-Game-DB".get_lessons_private_by_teacher_per_page($1, $2, $3, $4)',
+      [req.teacher_id, var_page_number, var_page_size, var_name]
     );
     res.json(result.rows);
     console.log(result.rows);
@@ -379,7 +380,7 @@ const getLessonsPrivateByTeacherPages = async (req, res) => {
 };
 
 const getLessonsPublicPerPage = async (req, res) => {
-  const { var_page_number, var_page_size } = req.body;
+  const { var_page_number, var_page_size, var_name } = req.body;
   try {
     if (!var_page_number || !var_page_size) {
       return res
@@ -397,8 +398,8 @@ const getLessonsPublicPerPage = async (req, res) => {
         .json({ message: "Los parámetros de paginación son inválidos." });
     }
     const result = await db.pool.query(
-      'SELECT * from "Typing-Game-DB".get_lessons_public_per_page($1, $2)',
-      [var_page_number, var_page_size]
+      'SELECT * from "Typing-Game-DB".get_lessons_public_per_page($1, $2, $3)',
+      [var_page_number, var_page_size, var_name]
     );
     console.log(var_page_number, var_page_size);
     res.json(result.rows);
@@ -447,7 +448,7 @@ const getPublicLessonsByCode = async (req, res) => {
   try {
     const result = await db.pool.query(
       'SELECT * FROM "Typing-Game-DB".get_lessons_public_any_by_code($1)',
-      [req.body.lesson_code]
+      [getreq.body.lesson_code]
     );
   } catch (error) {
     console.log(error);
