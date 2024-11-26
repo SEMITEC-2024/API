@@ -188,30 +188,14 @@ const joinGroup = async (req, res) => {
 
 const getRecentActivity = async (req, res) => {
   try {
-    //const sql = 'SELECT * FROM "Typing-Game-DB".get_recent_activity(?)';
-    //const result = await db.pool.query(sql, [req.query.teacher_id]);
-   /* 
-    res.json([
-      {
-        message: "Jesús ha completado: Tarea 1",
-        date: "8 de noviembre de 2024",
-      },
-      {
-        message: "Jesús ha completado: Tarea 2",
-        date: "8 de noviembre de 2024",
-      },
-      {
-        message: "Jesús ha completado: Tarea 3",
-        date: "8 de noviembre de 2024",
-      },
-    ]);*/
-   res.json([])
-
+    const result = await db.pool.query('SELECT * FROM "Typing-Game-DB".get_latest_student_activity($1)',
+      [req.teacher_id]);
+    res.json(result.rows)
   } catch (error) {
     res
       .status(500)
       .json({
-        message: "Error al obtener la actividad reciente",
+        message: "Error al obtener las actividades recientes",
         error: error,
       });
   }
