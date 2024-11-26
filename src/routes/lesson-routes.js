@@ -188,4 +188,9 @@ router.post(
   lessonController.getStudentLessonsHistoryPerPage
 );
 
+router.get(
+  "/student/get-pending-lessons-count",
+  lessonController.getEstudentPendingLessonCount
+);
+
 module.exports = router;
