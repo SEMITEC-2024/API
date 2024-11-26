@@ -18,9 +18,7 @@ const saveLessonMetrics = async (req, res) => {
     'SELECT * FROM "Typing-Game-DB".insert_student_metrics($1, $2, $3, $4, $5, $6, $7, $8)';
   const { lesson_id, time_taken, mistakes, accuracy_rate, ppm, is_completed } =
   req.body;
-    console.log(req.body);
-    const date = new Date().toISOString().split("T")[0];
-    console.log(date);
+    const date = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Costa_Rica' });
   try {
     const result = await db.pool.query(sql, [
       lesson_id,
@@ -30,7 +28,7 @@ const saveLessonMetrics = async (req, res) => {
       accuracy_rate,
       ppm,
       is_completed,
-     '2024-11-13',
+      date,
     ]);
     res.json(result.rows);
   } catch (error) {
