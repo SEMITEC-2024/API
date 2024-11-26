@@ -43,8 +43,6 @@ router.get('/teacher/groups/members/total', groupsController.getGroupStudentsCou
 router.post('/student/groups/members', groupsController.getGroupStudents)
 router.post('/teacher/groups/members', groupsController.getGroupStudents)
 
-
-router.get('/teacher/recent-activity', groupsController.getRecentActivity)
 router.post('/student/groups/members/remove', groupsController.deleteStudentFromGroup)
 router.post('/teacher/groups/members/remove', groupsController.deleteStudentFromGroup) 
 
