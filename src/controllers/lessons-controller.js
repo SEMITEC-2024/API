@@ -569,6 +569,21 @@ const getPPMAndAccuracyFromTeacher = async (req, res) => {
   } 
 }
 
+const getEstudentPendingLessonCount = async (req, res) => {
+  try {
+    const result = await db.pool.query(
+      'SELECT * FROM "Typing-Game-DB".get_student_pending_completed_lesson_count($1)',
+      [req.teacher_id]
+    );
+    res.json(result.rows);
+  } catch (error) {
+    console.log(error);
+    res
+      .status(500)
+      .json({ message: "Error al obtener la lección", error: error });
+  }
+}
+
 module.exports = {
   getLesson,
   saveLessonMetrics,
@@ -600,5 +615,6 @@ module.exports = {
   getLessonsCountPendingCompletedStudent,
   getPPMAndAccuracy,
   getPendingLessonCountFromTeacher,
-  getPPMAndAccuracyFromTeacher
+  getPPMAndAccuracyFromTeacher,
+  getEstudentPendingLessonCount,
 };
