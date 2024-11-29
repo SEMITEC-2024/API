@@ -188,7 +188,7 @@ const getAccuracyHistory = (req, res) => {
 
 const getNextLesson = async (req, res) => {
   try {
-    const sql = 'SELECT * FROM "Typing-Game-DB".get_last_lesson($1)';
+    const sql = 'SELECT * FROM "Typing-Game-DB".get_lessons_next_default($1)';
     const result = await db.pool.query(sql, [req.teacher_id]);
     res.json(result.rows);
   } catch (error) {
