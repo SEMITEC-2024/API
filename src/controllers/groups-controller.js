@@ -178,7 +178,7 @@ const createGroup = async (req, res) => {
 const joinGroup = async (req, res) => {
   const { var_group_code } = req.body;
   try {
-    const result = await db.pool.query('SELECT * FROM "Typing-Game-DB".insert_student_in_group($1, $2)',
+    const result = await db.pool.query('SELECT * FROM "Typing-Game-DB".insert_student_in_group_student($1, $2)',
       [var_group_code, req.teacher_id]);
     res.json(result.rows)
   } catch (error) {
