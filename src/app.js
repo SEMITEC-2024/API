@@ -1,7 +1,11 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
-require('dotenv').config()
 const port = process.env.PORT
+
+const { Pool } = require('pg'); // Ensure Pool is used here
+const { connection, pool } = require('./database/connection'); // Import the connection
+
 const con = require('./controllers/account-controller')
 const accountRoutes = require('./routes/account-routes')
 const lessonRoutes = require('./routes/lesson-routes')
